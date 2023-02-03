@@ -67,8 +67,8 @@ export default {
     signUpFormTitle: '注册',
     forgetFormTitle: '重置密码',
 
-    signInTitle: 'Jeecg Boot',
-    signInDesc: '是中国最具影响力的 企业级低代码平台！在线开发，可视化拖拽设计，零代码实现80%的基础功能~',
+    signInTitle: '统计过程控制（Statistical Process Control）',
+    signInDesc: '是一种借助数理统计方法的过程控制工具。它对生产过程进行分析评价，根据反馈信息及时发现系统性因素出现的征兆，并采取措施消除其影响，使过程维持在仅受随机性因素影响的受控状态，以达到控制质量的目的。',
     policy: '我同意xxx隐私政策',
     scanSign: `扫码后，即可完成登录`,
     scanSuccess: `扫码成功，登录中`,
