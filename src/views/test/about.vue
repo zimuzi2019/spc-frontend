@@ -38,7 +38,7 @@
     </a-descriptions>
 
     <div style="margin: 20px">
-      <img src="/resource/img/img.png" title="spc.png" width="2000">
+      <img src="/resource/img/spc.png" title="spc.png" width="2000">
     </div>
 
 
