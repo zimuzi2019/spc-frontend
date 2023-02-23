@@ -35,9 +35,40 @@
         title="收集表"
         @ok="handleOk"
       >
-        <p> test </p>
-        <p> test </p>
-        <p> test </p>
+
+        <a-form
+          v-model="graphInfo"
+          :label-col="{ span: 7 }"
+          :wrapper-col="{ span: 15 }"
+        >
+          <br/>   <!-- 调一下间距，不知道有没有更好的方法 -->
+          <a-form-item label="控制图类型" name="graphType">
+            <a-select v-model:value = "graphInfo.graphType" placeholder="请选择控制图类型">
+              <a-select-option v-for="(item, index) in graphTypeDictionary.graphDictionaryText"
+                               :key = "item"
+                               :value="graphTypeDictionary.graphDictionaryValue[index]"
+              >
+                {{item}}
+              </a-select-option>
+            </a-select>
+          </a-form-item>
+
+          <a-form-item label="子组总数">
+            <a-input v-model:value = "graphInfo.subgroupTotal" placeholder="请输入子组总数（如：100）" type="number"/>
+          </a-form-item>
+
+          <a-form-item label="子组容量" v-if="(graphInfo.graphType === 'X-R'|| graphInfo.graphType === 'X-S' || graphInfo.graphType === '中位数' || graphInfo.graphType === 'nP' || graphInfo.graphType === 'C')" type="number">
+            <a-input v-model:value = "graphInfo.subgroupCapacity" placeholder="请输入子组容量（如：50）" type="number"/>
+          </a-form-item>
+
+          <a-form-item label="规范上限值（USL）" v-if="(graphInfo.graphType === 'X-R'|| graphInfo.graphType === 'X-S' || graphInfo.graphType === '中位数' || graphInfo.graphType === 'X-MR')">
+            <a-input v-model:value = "graphInfo.USL" placeholder="请输入规范上限值USL（如：200.0312）" type="number"/>
+          </a-form-item>
+
+          <a-form-item label="规范下限值（LSL）" v-if="(graphInfo.graphType === 'X-R'|| graphInfo.graphType === 'X-S' || graphInfo.graphType === '中位数' || graphInfo.graphType === 'X-MR')">
+            <a-input v-model:value = "graphInfo.LSL" placeholder="请输入规范下限值LSL（如：100.0112）" type="number"/>
+          </a-form-item>
+        </a-form>
       </a-modal>
 
 
@@ -54,29 +85,76 @@
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue';
+import {defineComponent, onMounted, ref} from 'vue';
 import { UploadOutlined } from '@ant-design/icons-vue';
+import { graphTypeDictionary } from './graphTypeDictionary'
 import { message } from 'ant-design-vue';
+import { useRouter } from 'vue-router'
 
 export default defineComponent({
   name: "DataEntry",
   components: {UploadOutlined},
 
   setup() {
+    const router = useRouter()
+
     const visible = ref(false)
 
+    const graphInfo = ref({})
+
+
     const showModal = () => {
+      graphInfo.value ={};
       visible.value = true;
     }
 
     const handleOk = () => {
       visible.value = false;
+      console.log(graphInfo.value)
+
+      // 表单填写内容校验
+      let isLegal = true
+
+      if( !graphInfo.value.graphType || !graphInfo.value.subgroupTotal ) {
+        message.error("请填写控制图类型和子组总数！")
+        isLegal = false
+      } else {
+        if (!Number.isInteger( Number(graphInfo.value.subgroupTotal) ) ) {
+          message.error("子组总数请填写整数！")
+          isLegal = false
+        }
+
+        if ( graphInfo.value.graphType === "X-R" || graphInfo.value.graphType === "X-S" || graphInfo.value.graphType === "中位数" || graphInfo.value.graphType === "nP" || graphInfo.value.graphType === "C" ) {
+          if (!graphInfo.value.subgroupCapacity) {
+            message.error("请填写子组容量！")
+            isLegal = false
+
+          } else if ( !Number.isInteger( Number(graphInfo.value.subgroupCapacity) ) ) {
+            message.error("子组容量请填写整数！")
+            isLegal = false
+          }
+        }
+
+        if ( (graphInfo.value.graphType === "X-R" || graphInfo.value.graphType === "X-S" || graphInfo.value.graphType === "中位数" || graphInfo.value.graphType === "X-MR") && (!graphInfo.value.USL || !graphInfo.value.LSL) ) {
+            message.error("请填写规范上限（USL）和规范下限（LSL）！")
+            isLegal = false
+        }
+      }
+
+      // 跳转
+      if (isLegal) router.push({name: 'DataInput', params: { graphInfo: graphInfo.value } })
     }
+
+    onMounted(() => {
+      console.log(graphTypeDictionary)
+    })
 
     return {
       showModal,
       handleOk,
       visible,
+      graphInfo,
+      graphTypeDictionary,
     }
   }
 })
