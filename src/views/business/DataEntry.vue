@@ -142,7 +142,7 @@ export default defineComponent({
       }
 
       // 跳转
-      if (isLegal) router.push({name: 'DataInput', params: { graphInfo: graphInfo.value } })
+      if (isLegal) router.push({name: 'DataInput', params:{ graphInfo: JSON.stringify(graphInfo.value)} })
     }
 
     onMounted(() => {

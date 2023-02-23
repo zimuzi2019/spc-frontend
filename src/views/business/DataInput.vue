@@ -1,8 +1,10 @@
 <template>
+  <h1>{{graphInfo.graphType}}</h1>
+  <h1>{{graphInfo.subgroupTotal}}</h1>
 </template>
 
 <script>
-import {computed, onMounted} from "vue";
+import {computed, onMounted, ref} from "vue";
 import {useRoute} from "vue-router";
 
 export default {
@@ -10,8 +12,7 @@ export default {
 
   setup() {
     const route = useRoute()
-
-    const graphInfo = computed(() => route.params.graphInfo )
+    const graphInfo = ref(JSON.parse(route.params.graphInfo))
 
     onMounted(() => {
       console.log(graphInfo.value)
