@@ -44,8 +44,8 @@
   <!-- 根据控制图类型决定加载哪种形式的输入格式 -->
   <div v-for="(row, index1) in dataArrayXRXSMedium" :key="index1" v-if="graphInfo.graphType === 'X-R' || graphInfo.graphType === 'X-S' || graphInfo.graphType ==='中位数'">
     <a-divider>子组编号{{ index1+1 }}</a-divider>
-    <a-form layout="horizontal">
-      <a-form-item v-for="(item, index2) in row" :label="`样品编号${String(index2+1)}`" :key="index2" :label-col="{ span: 2 }">
+    <a-form>
+      <a-form-item v-for="(item, index2) in row" :label="`样品编号${String(index2+1)}`" :key="index2" :label-col="{ span: 3 }" :wrapper-col="{ span: 19 }">
         <a-input type="number" placeholder="请填入实际测量值，如：50.12" v-model:value="dataArrayXRXSMedium[index1][index2]"></a-input>
       </a-form-item>
     </a-form>
@@ -54,8 +54,8 @@
 
   <div v-if="graphInfo.graphType === 'X-MR'">
     <a-divider/>
-    <a-form layout="horizontal">
-      <a-form-item v-for="(item, index) in dataArrayXMR" :label="`样本测量值${String(index+1)}`" :key="index" :label-col="{ span: 2 }">
+    <a-form>
+      <a-form-item v-for="(item, index) in dataArrayXMR" :label="`样本测量值${String(index+1)}`" :key="index" :label-col="{ span: 3 }" :wrapper-col="{ span: 19 }">
         <a-input type="number" placeholder="请填入实际测量值，如：50.12" v-model:value="dataArrayXMR[index]"></a-input>
       </a-form-item>
     </a-form>
@@ -63,17 +63,17 @@
 
   <div v-if="graphInfo.graphType === 'C' || graphInfo.graphType === 'nP'">
     <a-divider/>
-    <a-form layout="horizontal">
-      <a-form-item v-for="(item, index) in dataArrayXMR" :label="`子组编号${String(index+1)}次品/缺陷数`" :key="index" :label-col="{ span: 3 }">
-        <a-input type="number" placeholder="请填入实际测量值，如：50.12" v-model:value="dataArrayCnP[index]"></a-input>
+    <a-form>
+      <a-form-item v-for="(item, index) in dataArrayXMR" :label="`子组编号${String(index+1)}次品/缺陷数`" :key="index" :label-col="{ span: 4 }" :wrapper-col="{ span: 18 }">
+        <a-input type="number" placeholder="请填入实际测量值，如：2" v-model:value="dataArrayCnP[index]"></a-input>
       </a-form-item>
     </a-form>
   </div>
 
   <div v-if="graphInfo.graphType === 'P' || graphInfo.graphType === 'U'">
     <a-divider/>
-    <a-form layout="horizontal">
-      <a-form-item v-for="(item, index) in dataArrayPU1" :label="`子组编号${String(index+1)}`" :key="index" :label-col="{ span: 2 }">
+    <a-form>
+      <a-form-item v-for="(item, index) in dataArrayPU1" :label="`子组编号${String(index+1)}`" :key="index" :label-col="{ span: 3 }" :wrapper-col="{ span: 19 }">
         <a-input type="number" placeholder="请填入该子组所含样本容量，如：50" v-model:value="dataArrayPU1[index]"></a-input>
         <a-input type="number" placeholder="请填入该子组所含次品/缺陷数量，如：3" v-model:value="dataArrayPU2[index]"></a-input>
       </a-form-item>
