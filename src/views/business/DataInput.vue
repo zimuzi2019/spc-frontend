@@ -29,7 +29,7 @@
   <a-divider>请在下方输入框中绘制控制图所需数据</a-divider>
 
 
-  <a-form layout="inline" style="margin: 8px">
+  <a-form layout="inline" style="margin: 30px">
     <a-form-item>
       <a-button type="primary" @click="handleClear">重置</a-button>
     </a-form-item>
@@ -86,9 +86,10 @@
 </template>
 
 <script>
-import {onBeforeUnmount, onMounted, ref} from "vue";
+import { onMounted, ref} from "vue";
 import {useRoute} from "vue-router";
 import { graphTypeDictionary } from './graphTypeDictionary'
+import axios from "axios";
 
 export default {
   name: "DataInput",
@@ -112,7 +113,7 @@ export default {
 
     let arr2 = []  // 用于记录X-MR图数据
     let arr3 = []  // 用于记录C、nP图数据
-    let arr4 = []; let arr5 = [];  // 用于记录P、U图数据
+    let arr4 = []; let arr5 = [];  // 用于记录P、U图数据  arr4：子组容量 arr5：次品缺陷数量
     for (let i = 0; i < Number(graphInfo.value.subgroupTotal); i++) {
       arr2.push(null); arr3.push(null); arr4.push(null); arr5.push(null);
     }
@@ -137,8 +138,20 @@ export default {
       if (graphInfo.value.graphType === 'C' || graphInfo.value.graphType === 'nP') console.log(dataArrayCnP.value)
       if (graphInfo.value.graphType === 'P' || graphInfo.value.graphType === 'U') console.log(dataArrayPU1.value, dataArrayPU2.value)
 
-      let graphData;
-
+      axios.post("/spc/draw", {
+        graphType: graphInfo.value.graphType,
+        subgroupTotal: graphInfo.value.subgroupTotal,
+        subgroupCapacity: graphInfo.value.subgroupCapacity,
+        usl: graphInfo.value.USL,
+        lsl: graphInfo.value.LSL,
+        dataArrayXRXSMedium: dataArrayXRXSMedium.value,
+        dataArrayXMR: dataArrayXMR.value,
+        dataArrayCnP: dataArrayCnP.value,
+        dataArrayPU1: dataArrayPU1.value,
+        dataArrayPU2: dataArrayPU2.value,
+      }).then((res) => {
+        console.log("接收数据成功");
+      })
 
     }
 
