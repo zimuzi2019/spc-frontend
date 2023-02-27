@@ -8,6 +8,12 @@
     <div class="dash-box">
 
           <a-upload
+            v-model:file-list="fileList"
+            accept = ".xlsx"
+            name = "file"
+            :multiple = "false"
+            @change = "handleChange"
+            action = "/spc/read"
           >
             <a-button type="primary" size="large">
               <UploadOutlined/>
@@ -145,6 +151,23 @@ export default defineComponent({
       if (isLegal) router.push({name: 'DataInput', params:{ graphInfo: JSON.stringify(graphInfo.value)} })
     }
 
+
+    // 文件上传
+    const handleChange = info => {
+      if (info.file.status !== 'uploading') {
+        console.log(info.file, info.fileList);
+      }
+
+      if (info.file.status === 'done') {
+        message.success(`数据登入表${info.file.name}上传成功`);
+        console.log(`${info.file.response.success}`);
+      } else if (info.file.status === 'error') {
+        message.error("上传失败，请尝试重新上传");
+      }
+    };
+
+    const fileList = ref([])
+
     onMounted(() => {
       console.log(graphTypeDictionary)
     })
@@ -155,6 +178,9 @@ export default defineComponent({
       visible,
       graphInfo,
       graphTypeDictionary,
+
+      handleChange,
+      fileList,
     }
   }
 })
