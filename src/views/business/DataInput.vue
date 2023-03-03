@@ -73,9 +73,9 @@
   <div v-if="graphInfo.graphType === 'P' || graphInfo.graphType === 'U'">
     <a-divider/>
     <a-form>
-      <a-form-item v-for="(item, index) in dataArrayPU1" :label="`子组编号${String(index+1)}`" :key="index" :label-col="{ span: 3 }" :wrapper-col="{ span: 19 }">
-        <a-input type="number" placeholder="请填入该子组所含样本容量，如：50" v-model:value="dataArrayPU1[index]"></a-input>
-        <a-input type="number" placeholder="请填入该子组所含次品/缺陷数量，如：3" v-model:value="dataArrayPU2[index]"></a-input>
+      <a-form-item v-for="(item, index) in dataArrayPUSubgroupsCapacity" :label="`子组编号${String(index+1)}`" :key="index" :label-col="{ span: 3 }" :wrapper-col="{ span: 19 }">
+        <a-input type="number" placeholder="请填入该子组所含样本容量，如：50" v-model:value="dataArrayPUSubgroupsCapacity[index]"></a-input>
+        <a-input type="number" placeholder="请填入该子组所含次品/缺陷数量，如：3" v-model:value="dataArrayPUDefectsNum[index]"></a-input>
       </a-form-item>
     </a-form>
   </div>
@@ -117,7 +117,7 @@ export default {
     for (let i = 0; i < Number(graphInfo.value.subgroupTotal); i++) {
       arr2.push(null); arr3.push(null); arr4.push(null); arr5.push(null);
     }
-    const dataArrayXMR = ref(arr2); const dataArrayCnP = ref(arr3); const dataArrayPU1 = ref(arr4); const dataArrayPU2 = ref(arr5);
+    const dataArrayXMR = ref(arr2); const dataArrayCnP = ref(arr3); const dataArrayPUSubgroupsCapacity = ref(arr4); const dataArrayPUDefectsNum = ref(arr5);
 
 
 
@@ -136,7 +136,7 @@ export default {
       if (graphInfo.value.graphType === 'X-R' || graphInfo.value.graphType === 'X-S' || graphInfo.value.graphType === '中位数') console.log(dataArrayXRXSMedium.value)
       if (graphInfo.value.graphType === 'X-MR') console.log(dataArrayXMR.value)
       if (graphInfo.value.graphType === 'C' || graphInfo.value.graphType === 'nP') console.log(dataArrayCnP.value)
-      if (graphInfo.value.graphType === 'P' || graphInfo.value.graphType === 'U') console.log(dataArrayPU1.value, dataArrayPU2.value)
+      if (graphInfo.value.graphType === 'P' || graphInfo.value.graphType === 'U') console.log(dataArrayPUSubgroupsCapacity.value, dataArrayPUDefectsNum.value)
 
       axios.post("/spc/draw", {
         graphType: graphInfo.value.graphType,
@@ -144,11 +144,12 @@ export default {
         subgroupCapacity: graphInfo.value.subgroupCapacity,
         usl: graphInfo.value.USL,
         lsl: graphInfo.value.LSL,
+        sl: SL.value,
         dataArrayXRXSMedium: dataArrayXRXSMedium.value,
         dataArrayXMR: dataArrayXMR.value,
         dataArrayCnP: dataArrayCnP.value,
-        dataArrayPU1: dataArrayPU1.value,
-        dataArrayPU2: dataArrayPU2.value,
+        dataArrayPUSubgroupsCapacity: dataArrayPUSubgroupsCapacity.value,
+        dataArrayPUDefectsNum: dataArrayPUDefectsNum.value,
       }).then((res) => {
         console.log("接收数据成功");
       })
@@ -157,7 +158,7 @@ export default {
 
     const handleClear = () => {
       for (let i = 0; i < Number(graphInfo.value.subgroupTotal); i++) {
-        (dataArrayXMR.value)[i] = null; (dataArrayCnP.value)[i] = null; (dataArrayPU1.value)[i] = null; (dataArrayPU2.value)[i] = null;
+        (dataArrayXMR.value)[i] = null; (dataArrayCnP.value)[i] = null; (dataArrayPUSubgroupsCapacity.value)[i] = null; (dataArrayPUDefectsNum.value)[i] = null;
         for (let j = 0; j < Number(graphInfo.value.subgroupCapacity); j++) {
           (dataArrayXRXSMedium.value)[i][j] = null;
         }
@@ -179,8 +180,8 @@ export default {
       dataArrayXRXSMedium,
       dataArrayXMR,
       dataArrayCnP,
-      dataArrayPU1,
-      dataArrayPU2,
+      dataArrayPUSubgroupsCapacity,
+      dataArrayPUDefectsNum,
     }
   }
 }
