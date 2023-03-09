@@ -87,15 +87,18 @@
 
 <script>
 import { onMounted, ref} from "vue";
-import {useRoute} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 import { graphTypeDictionary } from './graphTypeDictionary'
 import axios from "axios";
+import {message} from "ant-design-vue";
 
 export default {
   name: "DataInput",
 
   setup() {
     const route = useRoute()
+    const router = useRouter();
+
     const graphInfo = ref(JSON.parse(route.params.graphInfo))
     const SL = ref((Number(graphInfo.value.USL) + Number(graphInfo.value.LSL)) / 2)
 
@@ -150,8 +153,18 @@ export default {
         dataArrayCnP: dataArrayCnP.value,
         dataArrayPUSubgroupsCapacity: dataArrayPUSubgroupsCapacity.value,
         dataArrayPUDefectsNum: dataArrayPUDefectsNum.value,
-      }).then((res) => {
-        console.log("接收数据成功");
+      }).then((response) => {
+        const data = response.data;
+        if (data.success) {
+          const graphData = ref(data.result);
+
+          if (graphData.value.graphType === 'X-R' || graphData.value.graphType === 'X-S' || graphData.value.graphType === '中位数') router.push({name: 'GraphXRXSMedium', params:{ graphData: JSON.stringify(graphData.value)} })
+          if (graphData.value.graphType === 'X-MR')                                                                                router.push({name: 'GraphXMR', params:{ graphData: JSON.stringify(graphData.value)} })
+          if (graphData.value.graphType === 'P' || graphData.value.graphType === 'U')                                              router.push({name: 'GraphPU', params:{ graphData: JSON.stringify(graphData.value)} })
+          if (graphData.value.graphType === 'C' || graphData.value.graphType === 'nP')                                             router.push({name: 'GraphCnP', params:{ graphData: JSON.stringify(graphData.value)} })
+        } else {
+          message.error("返回计算及分析结果出错！");
+        }
       })
 
     }

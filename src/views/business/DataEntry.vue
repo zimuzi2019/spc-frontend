@@ -160,7 +160,17 @@ export default defineComponent({
 
       if (info.file.status === 'done') {
         message.success(`数据登入表${info.file.name}上传成功`);
-        console.log(`${info.file.response.success}`);
+
+        if (info.file.response.success) {
+          const graphData = ref(info.file.response.result);
+
+          if (graphData.value.graphType === 'X-R' || graphData.value.graphType === 'X-S' || graphData.value.graphType === '中位数') router.push({name: 'GraphXRXSMedium', params:{ graphData: JSON.stringify(graphData.value)} })
+          if (graphData.value.graphType === 'X-MR')                                                                                router.push({name: 'GraphXMR', params:{ graphData: JSON.stringify(graphData.value)} })
+          if (graphData.value.graphType === 'P' || graphData.value.graphType === 'U')                                              router.push({name: 'GraphPU', params:{ graphData: JSON.stringify(graphData.value)} })
+          if (graphData.value.graphType === 'C' || graphData.value.graphType === 'nP')                                             router.push({name: 'GraphCnP', params:{ graphData: JSON.stringify(graphData.value)} })
+        } else {
+          message.error("返回计算及分析结果出错！");
+        }
       } else if (info.file.status === 'error') {
         message.error("上传失败，请尝试重新上传");
       }
