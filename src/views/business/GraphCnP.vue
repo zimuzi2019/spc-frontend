@@ -97,11 +97,27 @@ export default {
 
         xAxis: {
           type: 'category',
-          data: keys
+          name: '不良品数量/缺陷数量',
+          nameLocation: 'center',
+          nameTextStyle: {
+            color: '#000',
+            fontWeight: 'bold',
+            fontSize: 15
+          },
+          nameGap: 40,
+          data: keys,
         },
 
         yAxis: {
           type: 'value',
+          name: '频数',
+          nameLocation: 'center',
+          nameTextStyle: {
+            color: '#000',
+            fontWeight: 'bold',
+            fontSize: 15
+          },
+          nameGap:40,
           interval: 1,
         },
 
