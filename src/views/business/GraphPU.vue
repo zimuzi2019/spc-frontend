@@ -22,23 +22,23 @@
       <div class="chart-container">
         <div class="chart" id="spcChart"></div>
       </div>
-    </a-descriptions-item><a-descriptions-item></a-descriptions-item><a-descriptions-item></a-descriptions-item>
+    </a-descriptions-item>
   </a-descriptions>
 
   <a-descriptions  bordered style="margin: 5px">
-    <a-descriptions-item label="C区点占比">{{graphData.pointsCRadio}}</a-descriptions-item><a-descriptions-item></a-descriptions-item><a-descriptions-item></a-descriptions-item>
+    <a-descriptions-item label="C区点占比">{{graphData.pointsCRadio}}</a-descriptions-item>
 
-    <a-descriptions-item label="超出控制限点占比" v-if="graphData.specialPoints.length !== 0">{{graphData.pointsSpecialRadio}}</a-descriptions-item><a-descriptions-item></a-descriptions-item><a-descriptions-item></a-descriptions-item>
+    <a-descriptions-item label="超出控制限点占比" v-if="graphData.specialPoints.length !== 0">{{graphData.pointsSpecialRadio}}</a-descriptions-item>
 
-    <a-descriptions-item label="超出控制限点编号" v-if="graphData.specialPoints.length !== 0">{{graphData.specialPoints.join(' ')}}</a-descriptions-item><a-descriptions-item></a-descriptions-item><a-descriptions-item></a-descriptions-item>
+    <a-descriptions-item label="超出控制限点编号" v-if="graphData.specialPoints.length !== 0">{{graphData.specialPoints.join(' ')}}</a-descriptions-item>
 
-    <a-descriptions-item label="多点连续递增" v-if="graphData.ascendChainList.length !== 0">{{chainListDisplay(graphData.ascendChainList)}}</a-descriptions-item><a-descriptions-item></a-descriptions-item><a-descriptions-item></a-descriptions-item>
+    <a-descriptions-item label="多点连续递增" v-if="graphData.ascendChainList.length !== 0">{{chainListDisplay(graphData.ascendChainList)}}</a-descriptions-item>
 
-    <a-descriptions-item label="多点连续递减" v-if="graphData.descendChainList.length !== 0">{{chainListDisplay(graphData.descendChainList)}}</a-descriptions-item><a-descriptions-item></a-descriptions-item><a-descriptions-item></a-descriptions-item>
+    <a-descriptions-item label="多点连续递减" v-if="graphData.descendChainList.length !== 0">{{chainListDisplay(graphData.descendChainList)}}</a-descriptions-item>
 
-    <a-descriptions-item label="多点连续落在中心线上侧" v-if="graphData.upperChainList.length !== 0">{{chainListDisplay(graphData.upperChainList)}}</a-descriptions-item><a-descriptions-item></a-descriptions-item><a-descriptions-item></a-descriptions-item>
+    <a-descriptions-item label="多点连续落在中心线上侧" v-if="graphData.upperChainList.length !== 0">{{chainListDisplay(graphData.upperChainList)}}</a-descriptions-item>
 
-    <a-descriptions-item label="多点连续落在中心线下侧" v-if="graphData.lowerChainList.length !== 0">{{chainListDisplay(graphData.lowerChainList)}}</a-descriptions-item><a-descriptions-item></a-descriptions-item><a-descriptions-item></a-descriptions-item>
+    <a-descriptions-item label="多点连续落在中心线下侧" v-if="graphData.lowerChainList.length !== 0">{{chainListDisplay(graphData.lowerChainList)}}</a-descriptions-item>
   </a-descriptions>
 
 </template>
@@ -67,7 +67,7 @@ export default {
       const spcChart = echarts.init(document.getElementById('spcChart'))
       spcChart.setOption({
         legend: {
-          data: [ '上限值UCL', '中心限CL', '下限值LCL', '不良品数量/缺陷数量' ],
+          data: [ '标准化单位不良品率' ],
           orient: 'horizontal',
           left: 'center',
         },
@@ -91,9 +91,9 @@ export default {
 
         yAxis: {
           type: 'value',
-          min: -graphData.value.graduation,
-          max: graphData.value.graduation,
-          interval: 2,
+          // min: -graphData.value.graduation,
+          // max: graphData.value.graduation,
+          // interval: 2,
           name: '标准化单位不良品率',
           nameLocation: 'center',
           nameGap: 40,
@@ -117,17 +117,17 @@ export default {
               precision: 3,
               data: [
                 {
-                  name: '上限值UCL',
+                  name: 'UCL',
                   yAxis: graphData.value.ucl,
                   lineStyle: {
                     color: '#ff6347',
                     width: 2,
                   },
                   label: {
-                    color: '#000',
+                    color: '#ff6347',
                     fontWeight: 'bold',
                     fontSize: '10',
-                    formatter: '{c}'
+                    formatter: '{b} {c}'
                   }
                 },
               ]
@@ -145,17 +145,17 @@ export default {
               precision: 3,
               data: [
                 {
-                  name: '下限值LCL',
+                  name: 'LCL',
                   yAxis: graphData.value.lcl,
                   lineStyle: {
                     color: '#ff00ff',
                     width: 2,
                   },
                   label: {
-                    color: '#000',
+                    color: '#ff00ff',
                     fontWeight: 'bold',
                     fontSize: '10',
-                    formatter: '{c}'
+                    formatter: '{b} {c}'
                   }
                 },
               ]
@@ -173,17 +173,17 @@ export default {
               precision: 3,
               data: [
                 {
-                  name: '中心限CL',
+                  name: 'CL',
                   yAxis: graphData.value.cl,
                   lineStyle: {
                     color: '#0000ff',
                     width: 2,
                   },
                   label: {
-                    color: '#000',
+                    color: '#0000ff',
                     fontWeight: 'bold',
                     fontSize: '10',
-                    formatter: '{c}'
+                    formatter: '{b}  {c}'
                   }
                 },
               ]

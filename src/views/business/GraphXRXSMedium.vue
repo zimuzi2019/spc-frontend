@@ -17,6 +17,10 @@ export default {
     onMounted(() => {
       console.log(graphData.value);
     })
+
+    return {
+      graphData,
+    }
   }
 }
 </script>
