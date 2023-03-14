@@ -91,9 +91,9 @@ export default {
 
         yAxis: {
           type: 'value',
-          // min: -graphData.value.graduation,
-          // max: graphData.value.graduation,
-          // interval: 2,
+          min: -graphData.value.graduation,
+          max: graphData.value.graduation,
+          interval: 2,
           name: '标准化单位不良品率',
           nameLocation: 'center',
           nameGap: 40,

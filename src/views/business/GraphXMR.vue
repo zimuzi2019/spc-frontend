@@ -271,8 +271,8 @@ export default {
         }
       ]
       // X-MR图的X图LSL可能小于0
-      if (graphData.value.lcl >= 0){
-        markLineData.push([{
+      if (graphData.value.lclX >= 0){
+        markLineData.push({
           name: 'LCL',
           yAxis: graphData.value.lclX,
           lineStyle: {
@@ -285,7 +285,7 @@ export default {
             fontSize: '10',
             formatter: '{b} {c}'
           }
-        }])
+        })
       }
 
       const spcChartX = echarts.init(document.getElementById("spcChartX"))
@@ -324,6 +324,8 @@ export default {
             fontSize: 15
           },
           min: 0,
+          max: graphData.value.graduationX - (graphData.value.graduationX % 50) + 50,
+          interval: 50
         },
 
         series: [
@@ -388,6 +390,9 @@ export default {
             fontWeight: 'bold',
             fontSize: 15
           },
+          min: 0,
+          max: graphData.value.graduationMR - (graphData.value.graduationMR % 50) + 50,
+          interval: 50
         },
 
         series: [
