@@ -1,50 +1,64 @@
 <template>
-  <a-divider>数据基本信息</a-divider>
+  <div id="content">
+    <a-divider>数据基本信息</a-divider>
 
-  <a-descriptions bordered style="margin: 5px">
-    <a-descriptions-item label="子组数">{{graphData.subgroupTotal}}</a-descriptions-item>
-    <a-descriptions-item label="子组容量">{{graphData.subgroupCapacity}}</a-descriptions-item>
-    <a-descriptions-item label="总样本数">{{graphData.sampleNum}}</a-descriptions-item>
-    <a-descriptions-item label="总不良品数">{{graphData.defectsNum}}</a-descriptions-item>
-    <a-descriptions-item label="平均不良率">{{graphData.avgDefectNum}}</a-descriptions-item>
-    <a-descriptions-item label="上限值UCL">{{graphData.ucl}}</a-descriptions-item>
-    <a-descriptions-item label="下限值UCL">{{graphData.lcl}}</a-descriptions-item>
-  </a-descriptions>
-  <a-descriptions bordered style="margin: 5px">
-    <a-descriptions-item label="计数值数据直方图">
-      <div class="chart-container">
-        <div class="chart" id="barChart"></div>
-      </div>
-    </a-descriptions-item>
-  </a-descriptions>
+    <a-descriptions bordered style="margin: 5px">
+      <a-descriptions-item label="子组数">{{graphData.subgroupTotal}}</a-descriptions-item>
+      <a-descriptions-item label="子组容量">{{graphData.subgroupCapacity}}</a-descriptions-item>
+      <a-descriptions-item label="总样本数">{{graphData.sampleNum}}</a-descriptions-item>
+      <a-descriptions-item label="总不良品数">{{graphData.defectsNum}}</a-descriptions-item>
+      <a-descriptions-item label="平均不良率">{{graphData.avgDefectNum}}</a-descriptions-item>
+      <a-descriptions-item label="上限值UCL">{{graphData.ucl}}</a-descriptions-item>
+      <a-descriptions-item label="下限值UCL">{{graphData.lcl}}</a-descriptions-item>
+    </a-descriptions>
+    <a-descriptions bordered style="margin: 5px">
+      <a-descriptions-item label="计数值数据直方图">
+        <div class="chart-container">
+          <div class="chart" id="barChart"></div>
+        </div>
+      </a-descriptions-item>
+    </a-descriptions>
 
-  <br/>
+    <br/>
 
-  <a-divider>控制图分析</a-divider>
+    <a-divider>控制图分析</a-divider>
 
-  <a-descriptions bordered style="margin: 5px">
-    <a-descriptions-item :label="graphData.graphType + '控制图'">
-      <div class="chart-container">
-        <div class="chart" id="spcChart"></div>
-      </div>
-    </a-descriptions-item>
-  </a-descriptions>
+    <a-descriptions bordered style="margin: 5px">
+      <a-descriptions-item :label="graphData.graphType + '控制图'">
+        <div class="chart-container">
+          <div class="chart" id="spcChart"></div>
+        </div>
+      </a-descriptions-item>
+    </a-descriptions>
 
-  <a-descriptions  bordered style="margin: 5px">
-    <a-descriptions-item label="C区点占比">{{graphData.pointsCRadio}}</a-descriptions-item>
+    <a-descriptions  bordered style="margin: 5px">
+      <a-descriptions-item label="C区点占比">{{graphData.pointsCRadio}}</a-descriptions-item>
 
-    <a-descriptions-item label="超出控制限点占比" v-if="graphData.specialPoints.length !== 0">{{graphData.pointsSpecialRadio}}</a-descriptions-item>
+      <a-descriptions-item label="超出控制限点占比" v-if="graphData.specialPoints.length !== 0">{{graphData.pointsSpecialRadio}}</a-descriptions-item>
 
-    <a-descriptions-item label="超出控制限点编号" v-if="graphData.specialPoints.length !== 0">{{graphData.specialPoints.join(' ')}}</a-descriptions-item>
+      <a-descriptions-item label="超出控制限点编号" v-if="graphData.specialPoints.length !== 0">{{graphData.specialPoints.join(' ')}}</a-descriptions-item>
 
-    <a-descriptions-item label="多点连续递增" v-if="graphData.ascendChainList.length !== 0">{{chainListDisplay(graphData.ascendChainList)}}</a-descriptions-item>
+      <a-descriptions-item label="多点连续递增" v-if="graphData.ascendChainList.length !== 0">{{chainListDisplay(graphData.ascendChainList)}}</a-descriptions-item>
 
-    <a-descriptions-item label="多点连续递减" v-if="graphData.descendChainList.length !== 0">{{chainListDisplay(graphData.descendChainList)}}</a-descriptions-item>
+      <a-descriptions-item label="多点连续递减" v-if="graphData.descendChainList.length !== 0">{{chainListDisplay(graphData.descendChainList)}}</a-descriptions-item>
 
-    <a-descriptions-item label="多点连续落在中心线上侧" v-if="graphData.upperChainList.length !== 0">{{chainListDisplay(graphData.upperChainList)}}</a-descriptions-item>
+      <a-descriptions-item label="多点连续落在中心线上侧" v-if="graphData.upperChainList.length !== 0">{{chainListDisplay(graphData.upperChainList)}}</a-descriptions-item>
 
-    <a-descriptions-item label="多点连续落在中心线下侧" v-if="graphData.lowerChainList.length !== 0">{{chainListDisplay(graphData.lowerChainList)}}</a-descriptions-item>
-  </a-descriptions>
+      <a-descriptions-item label="多点连续落在中心线下侧" v-if="graphData.lowerChainList.length !== 0">{{chainListDisplay(graphData.lowerChainList)}}</a-descriptions-item>
+    </a-descriptions>
+  </div>
+
+  <a-divider/>
+  <p style="margin-left: 80%">
+    <a-form layout="inline">
+      <a-form-item>
+        <a-button type="primary" @click="savePDF">导出PDF</a-button>
+      </a-form-item>
+      <a-form-item>
+        <a-button type="primary" @click="savePNG">导出PNG</a-button>
+      </a-form-item>
+    </a-form>
+  </p>
 </template>
 
 <script>
@@ -52,6 +66,8 @@ import {useRoute} from "vue-router";
 import {onMounted, ref} from "vue";
 import * as echarts from "echarts"
 import {message} from "ant-design-vue";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 export default {
   name: "GraphCnP",
@@ -64,6 +80,27 @@ export default {
       return chainList.map(function(item) {
         return item.join('-')
       }).join(' ')
+    }
+
+    const savePNG = function() {
+      const pdf = new jsPDF();
+
+      html2canvas(document.querySelector("#content")).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'report.png';
+        link.href = canvas.toDataURL();
+        link.click();
+      });
+    }
+
+    const savePDF = function() {
+      const pdf = new jsPDF();
+
+      html2canvas(document.querySelector("#content")).then(canvas => {
+        const imgData = canvas.toDataURL("image/png");
+        pdf.addImage(imgData, 'PNG', 0, 0, 210, 297);
+        pdf.save("report.pdf");
+      });
     }
 
     onMounted(() => {
@@ -394,6 +431,8 @@ export default {
     return {
       graphData,
       chainListDisplay,
+      savePDF,
+      savePNG
     }
   }
 }

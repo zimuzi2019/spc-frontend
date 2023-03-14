@@ -34,16 +34,16 @@
     "gen:icon": "esno ./build/generate/icon/index.ts"
   },
   "dependencies": {
-    "@jeecg/online": "3.4.4-RC",
-    "@iconify/iconify": "^2.2.1",
     "@ant-design/colors": "^6.0.0",
     "@ant-design/icons-vue": "^6.1.0",
+    "@iconify/iconify": "^2.2.1",
+    "@jeecg/online": "3.4.4-RC",
     "@logicflow/core": "^1.1.13",
     "@logicflow/extension": "^1.1.13",
-    "@vue/shared": "^3.2.33",
     "@vue/runtime-core": "^3.2.33",
-    "@vueuse/shared": "^8.3.0",
+    "@vue/shared": "^3.2.33",
     "@vueuse/core": "^8.3.0",
+    "@vueuse/shared": "^8.3.0",
     "@zxcvbn-ts/core": "^2.0.1",
     "ant-design-vue": "^3.2.12",
     "axios": "^0.26.1",
@@ -58,7 +58,9 @@
     "echarts": "^5.3.2",
     "emoji-mart-vue-fast": "^11.1.1",
     "enquire.js": "^2.1.6",
+    "html2canvas": "^1.4.1",
     "intro.js": "^5.1.0",
+    "jspdf": "^2.5.1",
     "lodash-es": "^4.17.21",
     "lodash.get": "^4.4.2",
     "md5": "^2.3.0",
@@ -67,9 +69,9 @@
     "path-to-regexp": "^6.2.0",
     "pinia": "2.0.12",
     "print-js": "^1.6.0",
-    "qs": "^6.10.3",
     "qrcode": "^1.5.0",
     "qrcodejs2": "0.0.2",
+    "qs": "^6.10.3",
     "resize-observer-polyfill": "^1.5.1",
     "showdown": "^2.1.0",
     "sortablejs": "^1.15.0",
@@ -80,14 +82,15 @@
     "vue-cropperjs": "^5.0.0",
     "vue-i18n": "^9.1.9",
     "vue-infinite-scroll": "^2.0.2",
+    "vue-json-pretty": "^2.0.6",
     "vue-print-nb-jeecg": "^1.0.10",
     "vue-router": "^4.0.14",
+    "vue-to-pdf": "^1.0.0",
     "vue-types": "^4.1.1",
     "vuedraggable": "^4.1.0",
     "vxe-table": "4.1.0",
     "vxe-table-plugin-antd": "3.0.5",
     "xe-utils": "^3.3.1",
-    "vue-json-pretty": "^2.0.6",
     "xss": "^1.0.13"
   },
   "devDependencies": {
@@ -95,6 +98,7 @@
     "@commitlint/config-conventional": "^16.2.1",
     "@iconify/json": "^2.1.30",
     "@purge-icons/generated": "^0.8.1",
+    "@rys-fe/vite-plugin-theme": "^0.8.6",
     "@types/codemirror": "^5.60.5",
     "@types/crypto-js": "^4.1.1",
     "@types/fs-extra": "^9.0.13",
@@ -169,7 +173,6 @@
     "vite-plugin-pwa": "^0.12.3",
     "vite-plugin-style-import": "^2.0.0",
     "vite-plugin-svg-icons": "^2.0.1",
-    "@rys-fe/vite-plugin-theme": "^0.8.6",
     "vite-plugin-vue-setup-extend": "^0.4.0",
     "vite-plugin-windicss": "^1.8.7",
     "vue-eslint-parser": "^8.3.0",
@@ -193,9 +196,7 @@
   },
   "vite": {
     "optimizeDeps": {
-      "include": [
-
-      ]
+      "include": []
     }
   }
 }

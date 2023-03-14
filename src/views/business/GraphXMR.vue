@@ -1,100 +1,115 @@
 <template>
-  <a-divider>数据基本信息</a-divider>
+  <div id="content">
+    <a-divider>数据基本信息</a-divider>
 
-  <a-descriptions bordered style="margin: 5px">
-    <a-descriptions-item label="总批次数">{{graphData.subgroupTotal}}</a-descriptions-item>
-    <a-descriptions-item label="平均值">{{graphData.avgX}}</a-descriptions-item>
-    <a-descriptions-item label="最大值">{{graphData.maxX}}</a-descriptions-item>
-    <a-descriptions-item label="最小值">{{graphData.minX}}</a-descriptions-item>
-    <a-descriptions-item label="中位数">{{graphData.midX}}</a-descriptions-item>
-    <a-descriptions-item label="标准差">{{graphData.stdX}}</a-descriptions-item>
-    <a-descriptions-item label="偏度">{{graphData.skewnessX}}</a-descriptions-item>
-    <a-descriptions-item label="峰度">{{graphData.kurtosisX}}</a-descriptions-item>
-    <a-descriptions-item label="规范上限 USL">{{graphData.usl}}</a-descriptions-item>
-    <a-descriptions-item label="中心限 SL">{{graphData.sl}}</a-descriptions-item>
-    <a-descriptions-item label="规范下限 LSL">{{graphData.lsl}}</a-descriptions-item>
-    <a-descriptions-item label="预估不良率 PPM">{{graphData.ppm}}</a-descriptions-item>
-    <a-descriptions-item label="上限值 UCL (X)">{{graphData.uclX}}</a-descriptions-item>
-    <a-descriptions-item label="中心限 CL (X)">{{graphData.clX}}</a-descriptions-item>
-    <a-descriptions-item label="下限值 LCL (X)">{{graphData.lclX}}</a-descriptions-item>
-    <a-descriptions-item label="上限值 UCL (MR)">{{graphData.uclMR}}</a-descriptions-item>
-    <a-descriptions-item label="中心限 CL (MR)">{{graphData.clMR}}</a-descriptions-item>
-    <a-descriptions-item label="下限值 LCL (MR)">{{graphData.lclMR}}</a-descriptions-item>
-    <a-descriptions-item label="标准偏差">{{graphData.sigma}}</a-descriptions-item>
-    <a-descriptions-item label="Pp">{{graphData.pp}}</a-descriptions-item>
-    <a-descriptions-item label="Ppk">{{graphData.ppk}}</a-descriptions-item>
-    <a-descriptions-item label="Ca">{{graphData.ca}}</a-descriptions-item>
-    <a-descriptions-item label="Cp">{{graphData.cp}}</a-descriptions-item>
-    <a-descriptions-item label="CPU">{{graphData.cpu}}</a-descriptions-item>
-    <a-descriptions-item label="CPL">{{graphData.cpl}}</a-descriptions-item>
-    <a-descriptions-item label="Cpk">{{graphData.cpk}}</a-descriptions-item>
-    <a-descriptions-item label="Cpk Grade">{{graphData.cpkGrade}}</a-descriptions-item>
-  </a-descriptions>
+    <a-descriptions bordered style="margin: 5px">
+      <a-descriptions-item label="总批次数">{{graphData.subgroupTotal}}</a-descriptions-item>
+      <a-descriptions-item label="平均值">{{graphData.avgX}}</a-descriptions-item>
+      <a-descriptions-item label="最大值">{{graphData.maxX}}</a-descriptions-item>
+      <a-descriptions-item label="最小值">{{graphData.minX}}</a-descriptions-item>
+      <a-descriptions-item label="中位数">{{graphData.midX}}</a-descriptions-item>
+      <a-descriptions-item label="标准差">{{graphData.stdX}}</a-descriptions-item>
+      <a-descriptions-item label="偏度">{{graphData.skewnessX}}</a-descriptions-item>
+      <a-descriptions-item label="峰度">{{graphData.kurtosisX}}</a-descriptions-item>
+      <a-descriptions-item label="规范上限 USL">{{graphData.usl}}</a-descriptions-item>
+      <a-descriptions-item label="中心限 SL">{{graphData.sl}}</a-descriptions-item>
+      <a-descriptions-item label="规范下限 LSL">{{graphData.lsl}}</a-descriptions-item>
+      <a-descriptions-item label="预估不良率 PPM">{{graphData.ppm}}</a-descriptions-item>
+      <a-descriptions-item label="上限值 UCL (X)">{{graphData.uclX}}</a-descriptions-item>
+      <a-descriptions-item label="中心限 CL (X)">{{graphData.clX}}</a-descriptions-item>
+      <a-descriptions-item label="下限值 LCL (X)">{{graphData.lclX}}</a-descriptions-item>
+      <a-descriptions-item label="上限值 UCL (MR)">{{graphData.uclMR}}</a-descriptions-item>
+      <a-descriptions-item label="中心限 CL (MR)">{{graphData.clMR}}</a-descriptions-item>
+      <a-descriptions-item label="下限值 LCL (MR)">{{graphData.lclMR}}</a-descriptions-item>
+      <a-descriptions-item label="标准偏差">{{graphData.sigma}}</a-descriptions-item>
+      <a-descriptions-item label="Pp">{{graphData.pp}}</a-descriptions-item>
+      <a-descriptions-item label="Ppk">{{graphData.ppk}}</a-descriptions-item>
+      <a-descriptions-item label="Ca">{{graphData.ca}}</a-descriptions-item>
+      <a-descriptions-item label="Cp">{{graphData.cp}}</a-descriptions-item>
+      <a-descriptions-item label="CPU">{{graphData.cpu}}</a-descriptions-item>
+      <a-descriptions-item label="CPL">{{graphData.cpl}}</a-descriptions-item>
+      <a-descriptions-item label="Cpk">{{graphData.cpk}}</a-descriptions-item>
+      <a-descriptions-item label="Cpk Grade">{{graphData.cpkGrade}}</a-descriptions-item>
+    </a-descriptions>
 
-  <a-descriptions>
-    <a-descriptions-item label="数据分布直方图">
-      <div class="chart-container">
-        <div class="chart" id="barChart"></div>
-      </div>
-    </a-descriptions-item>
-  </a-descriptions>
+    <a-descriptions>
+      <a-descriptions-item label="数据分布直方图">
+        <div class="chart-container">
+          <div class="chart" id="barChart"></div>
+        </div>
+      </a-descriptions-item>
+    </a-descriptions>
 
-  <a-divider>控制图分析</a-divider>
+    <a-divider>控制图分析</a-divider>
 
-  <a-descriptions bordered style="margin: 5px">
-    <a-descriptions-item label="X控制图">
-      <div class="chart-container">
-        <div class="chart" id="spcChartX"></div>
-      </div>
-    </a-descriptions-item>
-  </a-descriptions>
+    <a-descriptions bordered style="margin: 5px">
+      <a-descriptions-item label="X控制图">
+        <div class="chart-container">
+          <div class="chart" id="spcChartX"></div>
+        </div>
+      </a-descriptions-item>
+    </a-descriptions>
 
-  <a-descriptions  bordered style="margin: 5px">
-    <a-descriptions-item label="C区点占比">{{graphData.pointsCRadioX}}</a-descriptions-item>
+    <a-descriptions  bordered style="margin: 5px">
+      <a-descriptions-item label="C区点占比">{{graphData.pointsCRadioX}}</a-descriptions-item>
 
-    <a-descriptions-item label="超出控制限点占比" v-if="graphData.specialPointsX.length !== 0">{{graphData.pointsSpecialRadioX}}</a-descriptions-item>
+      <a-descriptions-item label="超出控制限点占比" v-if="graphData.specialPointsX.length !== 0">{{graphData.pointsSpecialRadioX}}</a-descriptions-item>
 
-    <a-descriptions-item label="超出控制限点编号" v-if="graphData.specialPointsX.length !== 0">{{graphData.specialPointsX.join(' ')}}</a-descriptions-item>
+      <a-descriptions-item label="超出控制限点编号" v-if="graphData.specialPointsX.length !== 0">{{graphData.specialPointsX.join(' ')}}</a-descriptions-item>
 
-    <a-descriptions-item label="多点连续递增" v-if="graphData.ascendChainXList.length !== 0">{{chainListDisplay(graphData.ascendChainXList)}}</a-descriptions-item>
+      <a-descriptions-item label="多点连续递增" v-if="graphData.ascendChainXList.length !== 0">{{chainListDisplay(graphData.ascendChainXList)}}</a-descriptions-item>
 
-    <a-descriptions-item label="多点连续递减" v-if="graphData.descendChainXList.length !== 0">{{chainListDisplay(graphData.descendChainXList)}}</a-descriptions-item>
+      <a-descriptions-item label="多点连续递减" v-if="graphData.descendChainXList.length !== 0">{{chainListDisplay(graphData.descendChainXList)}}</a-descriptions-item>
 
-    <a-descriptions-item label="多点连续落在中心线上侧" v-if="graphData.upperChainXList.length !== 0">{{chainListDisplay(graphData.upperChainXList)}}</a-descriptions-item>
+      <a-descriptions-item label="多点连续落在中心线上侧" v-if="graphData.upperChainXList.length !== 0">{{chainListDisplay(graphData.upperChainXList)}}</a-descriptions-item>
 
-    <a-descriptions-item label="多点连续落在中心线下侧" v-if="graphData.lowerChainXList.length !== 0">{{chainListDisplay(graphData.lowerChainXList)}}</a-descriptions-item>
-  </a-descriptions><br/><br/>
+      <a-descriptions-item label="多点连续落在中心线下侧" v-if="graphData.lowerChainXList.length !== 0">{{chainListDisplay(graphData.lowerChainXList)}}</a-descriptions-item>
+    </a-descriptions><br/><br/>
 
-  <a-descriptions bordered style="margin: 5px">
-    <a-descriptions-item label="MR控制图">
-      <div class="chart-container">
-        <div class="chart" id="spcChartMR"></div>
-      </div>
-    </a-descriptions-item>
-  </a-descriptions>
+    <a-descriptions bordered style="margin: 5px">
+      <a-descriptions-item label="MR控制图">
+        <div class="chart-container">
+          <div class="chart" id="spcChartMR"></div>
+        </div>
+      </a-descriptions-item>
+    </a-descriptions>
 
-  <a-descriptions  bordered style="margin: 5px">
-    <a-descriptions-item label="C区点占比">{{graphData.pointsCRadioMR}}</a-descriptions-item>
+    <a-descriptions  bordered style="margin: 5px">
+      <a-descriptions-item label="C区点占比">{{graphData.pointsCRadioMR}}</a-descriptions-item>
 
-    <a-descriptions-item label="超出控制限点占比" v-if="graphData.specialPointsMR.length !== 0">{{graphData.pointsSpecialRadioMR}}</a-descriptions-item>
+      <a-descriptions-item label="超出控制限点占比" v-if="graphData.specialPointsMR.length !== 0">{{graphData.pointsSpecialRadioMR}}</a-descriptions-item>
 
-    <a-descriptions-item label="超出控制限点编号" v-if="graphData.specialPointsMR.length !== 0">{{graphData.specialPointsMR.join(' ')}}</a-descriptions-item>
+      <a-descriptions-item label="超出控制限点编号" v-if="graphData.specialPointsMR.length !== 0">{{graphData.specialPointsMR.join(' ')}}</a-descriptions-item>
 
-    <a-descriptions-item label="多点连续递增" v-if="graphData.ascendChainMRList.length !== 0">{{chainListDisplay(graphData.ascendChainMRList)}}</a-descriptions-item>
+      <a-descriptions-item label="多点连续递增" v-if="graphData.ascendChainMRList.length !== 0">{{chainListDisplay(graphData.ascendChainMRList)}}</a-descriptions-item>
 
-    <a-descriptions-item label="多点连续递减" v-if="graphData.descendChainMRList.length !== 0">{{chainListDisplay(graphData.descendChainMRList)}}</a-descriptions-item>
+      <a-descriptions-item label="多点连续递减" v-if="graphData.descendChainMRList.length !== 0">{{chainListDisplay(graphData.descendChainMRList)}}</a-descriptions-item>
 
-    <a-descriptions-item label="多点连续落在中心线上侧" v-if="graphData.upperChainMRList.length !== 0">{{chainListDisplay(graphData.upperChainMRList)}}</a-descriptions-item>
+      <a-descriptions-item label="多点连续落在中心线上侧" v-if="graphData.upperChainMRList.length !== 0">{{chainListDisplay(graphData.upperChainMRList)}}</a-descriptions-item>
 
-    <a-descriptions-item label="多点连续落在中心线下侧" v-if="graphData.lowerChainMRList.length !== 0">{{chainListDisplay(graphData.lowerChainMRList)}}</a-descriptions-item>
-  </a-descriptions>
+      <a-descriptions-item label="多点连续落在中心线下侧" v-if="graphData.lowerChainMRList.length !== 0">{{chainListDisplay(graphData.lowerChainMRList)}}</a-descriptions-item>
+    </a-descriptions>
+  </div>
 
+  <a-divider/>
+  <p style="margin-left: 80%">
+    <a-form layout="inline">
+      <a-form-item>
+        <a-button type="primary" @click="savePDF">导出PDF</a-button>
+      </a-form-item>
+      <a-form-item>
+        <a-button type="primary" @click="savePNG">导出PNG</a-button>
+      </a-form-item>
+    </a-form>
+  </p>
 </template>
 
 <script>
 import {useRoute} from "vue-router";
 import {onMounted, ref} from "vue";
 import * as echarts from "echarts";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 export default {
   name: "GraphXMR",
@@ -107,6 +122,28 @@ export default {
       return chainList.map(function(item) {
         return item.join('-')
       }).join(' ')
+    }
+
+    const savePNG = function() {
+      const pdf = new jsPDF();
+
+      html2canvas(document.querySelector("#content")).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'report.png';
+        link.href = canvas.toDataURL();
+        link.click();
+      });
+    }
+
+
+    const savePDF = function() {
+      const pdf = new jsPDF();
+
+      html2canvas(document.querySelector("#content")).then(canvas => {
+        const imgData = canvas.toDataURL("image/png");
+        pdf.addImage(imgData, 'PNG', 0, 0, 210, 297);
+        pdf.save("report.pdf");
+      });
     }
 
     onMounted(() => {
@@ -511,7 +548,9 @@ export default {
 
     return {
       graphData,
-      chainListDisplay
+      chainListDisplay,
+      savePDF,
+      savePNG
     }
   }
 }
