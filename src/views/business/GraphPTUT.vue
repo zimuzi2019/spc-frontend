@@ -10,6 +10,8 @@
       <a-descriptions-item label="总样本数">{{graphData.samplesNum}}</a-descriptions-item>
       <a-descriptions-item label="总不良品数">{{graphData.defectsNum}}</a-descriptions-item>
       <a-descriptions-item label="平均不良率">{{graphData.avgDefectsNum}}</a-descriptions-item>
+      <a-descriptions-item label="上限值 UCL">{{graphData.ucl}}</a-descriptions-item>
+      <a-descriptions-item label="下限值 LCL">{{graphData.lcl}}</a-descriptions-item>
     </a-descriptions>
 
     <br/>
@@ -60,8 +62,9 @@ import {onMounted, ref} from "vue";
 import * as echarts from "echarts";
 import jsPDF from 'jspdf'
 import html2canvas from 'html2canvas'
+
 export default {
-  name: "GraphPU",
+  name: "GraphPTUT",
 
   setup() {
     const route = useRoute()
@@ -100,7 +103,7 @@ export default {
       const spcChart = echarts.init(document.getElementById('spcChart'))
       spcChart.setOption({
         legend: {
-          data: [ '单位不良品率' ],
+          data: [ '标准化单位不良品率' ],
           orient: 'horizontal',
           left: 'center',
         },
@@ -124,10 +127,10 @@ export default {
 
         yAxis: {
           type: 'value',
-          min: 0,
+          min: -graphData.value.graduation,
           max: graphData.value.graduation,
-          interval: 0.1,
-          name: '单位不良品率',
+          interval: 2,
+          name: '标准化单位不良品率',
           nameLocation: 'center',
           nameGap: 40,
           nameTextStyle: {
@@ -138,6 +141,62 @@ export default {
         },
 
         series: [
+          {
+            name: '上限值UCL',
+            data: [],
+            type: 'line',
+            itemStyle: {
+              color: '#ff6347'
+            },
+            markLine: {
+              symbol: 'none',
+              precision: 3,
+              data: [
+                {
+                  name: 'UCL',
+                  yAxis: graphData.value.ucl,
+                  lineStyle: {
+                    color: '#ff6347',
+                    width: 2,
+                  },
+                  label: {
+                    color: '#ff6347',
+                    fontWeight: 'bold',
+                    fontSize: '10',
+                    formatter: '{b} {c}'
+                  }
+                },
+              ]
+            }
+          },
+          {
+            name: '下限值LCL',
+            data: [],
+            type: 'line',
+            itemStyle: {
+              color: '#ff00ff'
+            },
+            markLine: {
+              symbol: 'none',
+              precision: 3,
+              data: [
+                {
+                  name: 'LCL',
+                  yAxis: graphData.value.lcl,
+                  lineStyle: {
+                    color: '#ff00ff',
+                    width: 2,
+                  },
+                  label: {
+                    color: '#ff00ff',
+                    fontWeight: 'bold',
+                    fontSize: '10',
+                    formatter: '{b} {c}'
+                  }
+                },
+              ]
+            }
+          },
           {
             name: '中心限CL',
             data: [],
@@ -167,38 +226,13 @@ export default {
             }
           },
           {
-            name: '上限值UCL',
-            data: graphData.value.ucl,
-            type: 'line',
-            itemStyle: {
-              color: '#ff6347'
-            },
-            lineStyle: {
-              color: '#ff6347',
-              width: 1,
-            },
-          },
-          {
-            name: '下限值LCL',
-            data: graphData.value.lcl,
-            type: 'line',
-            itemStyle: {
-              color: '#ff00ff'
-            },
-            lineStyle: {
-              color: '#ff00ff',
-              width: 1,
-            },
-          },
-          {
-            name: '单位不良品率',
+            name: '标准化单位不良品率',
             data: graphData.value.dataArray,
             type: 'line',
             itemStyle: {
               color: (params) => {
-                console.log(params)
-                if (params.value > graphData.value.ucl[params.dataIndex]) return '#ff6347'
-                else if (params.value < graphData.value.lcl[params.dataIndex]) return '#ff00ff'
+                if (params.value > graphData.value.ucl) return '#ff6347'
+                else if (params.value < graphData.value.lcl) return '#ff00ff'
                 else return '#ADD8E6'
               }
             },
@@ -217,7 +251,6 @@ export default {
       savePDF,
       savePNG
     }
-
   }
 }
 </script>

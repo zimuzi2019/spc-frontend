@@ -164,12 +164,13 @@ export default defineComponent({
         if (info.file.response.success) {
           const graphData = ref(info.file.response.result);
 
-          if (graphData.value.graphType === 'X-R')                                      router.push({name: 'GraphXR', params:{ graphData: JSON.stringify(graphData.value)} })
-          if (graphData.value.graphType === 'X-S')                                      router.push({name: 'GraphXS', params:{ graphData: JSON.stringify(graphData.value)} })
-          if (graphData.value.graphType === '中位数')                                    router.push({name: 'GraphMedium', params:{ graphData: JSON.stringify(graphData.value)} })
-          if (graphData.value.graphType === 'X-MR')                                     router.push({name: 'GraphXMR', params:{ graphData: JSON.stringify(graphData.value)} })
-          if (graphData.value.graphType === 'P' || graphData.value.graphType === 'U')   router.push({name: 'GraphPU', params:{ graphData: JSON.stringify(graphData.value)} })
-          if (graphData.value.graphType === 'C' || graphData.value.graphType === 'nP')  router.push({name: 'GraphCnP', params:{ graphData: JSON.stringify(graphData.value)} })
+          if (graphData.value.graphType === 'X-R')                                          router.push({name: 'GraphXR', params:{ graphData: JSON.stringify(graphData.value)} })
+          if (graphData.value.graphType === 'X-S')                                          router.push({name: 'GraphXS', params:{ graphData: JSON.stringify(graphData.value)} })
+          if (graphData.value.graphType === '中位数')                                        router.push({name: 'GraphMedium', params:{ graphData: JSON.stringify(graphData.value)} })
+          if (graphData.value.graphType === 'X-MR')                                         router.push({name: 'GraphXMR', params:{ graphData: JSON.stringify(graphData.value)} })
+          if (graphData.value.graphType === 'P' || graphData.value.graphType === 'U')       router.push({name: 'GraphPU', params:{ graphData: JSON.stringify(graphData.value)} })
+          if (graphData.value.graphType === 'P_T' || graphData.value.graphType === 'U_T')   router.push({name: 'GraphPTUT', params:{ graphData: JSON.stringify(graphData.value)} })
+          if (graphData.value.graphType === 'C' || graphData.value.graphType === 'nP')      router.push({name: 'GraphCnP', params:{ graphData: JSON.stringify(graphData.value)} })
         } else {
           message.error("返回计算及分析结果出错！");
         }

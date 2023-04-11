@@ -70,12 +70,12 @@
     </a-form>
   </div>
 
-  <div v-if="graphInfo.graphType === 'P' || graphInfo.graphType === 'U'">
+  <div v-if="graphInfo.graphType === 'P' || graphInfo.graphType === 'U' || graphInfo.graphType === 'P_T' || graphInfo.graphType === 'U_T'">
     <a-divider/>
     <a-form>
-      <a-form-item v-for="(item, index) in dataArrayPUSubgroupsCapacity" :label="`子组编号${String(index+1)}`" :key="index" :label-col="{ span: 3 }" :wrapper-col="{ span: 19 }">
-        <a-input type="number" placeholder="请填入该子组所含样本容量，如：50" v-model:value="dataArrayPUSubgroupsCapacity[index]"></a-input>
-        <a-input type="number" placeholder="请填入该子组所含次品/缺陷数量，如：3" v-model:value="dataArrayPUDefectsNum[index]"></a-input>
+      <a-form-item v-for="(item, index) in dataArrayPUPTUTSubgroupsCapacity" :label="`子组编号${String(index+1)}`" :key="index" :label-col="{ span: 3 }" :wrapper-col="{ span: 19 }">
+        <a-input type="number" placeholder="请填入该子组所含样本容量，如：50" v-model:value="dataArrayPUPTUTSubgroupsCapacity[index]"></a-input>
+        <a-input type="number" placeholder="请填入该子组所含次品/缺陷数量，如：3" v-model:value="dataArrayPUPTUTDefectsNum[index]"></a-input>
       </a-form-item>
     </a-form>
   </div>
@@ -116,11 +116,11 @@ export default {
 
     let arr2 = []  // 用于记录X-MR图数据
     let arr3 = []  // 用于记录C、nP图数据
-    let arr4 = []; let arr5 = [];  // 用于记录P、U图数据  arr4：子组容量 arr5：次品缺陷数量
+    let arr4 = []; let arr5 = [];  // 用于记录P、U、PT、UT图数据  arr4：子组容量 arr5：次品缺陷数量
     for (let i = 0; i < Number(graphInfo.value.subgroupTotal); i++) {
       arr2.push(null); arr3.push(null); arr4.push(null); arr5.push(null);
     }
-    const dataArrayXMR = ref(arr2); const dataArrayCnP = ref(arr3); const dataArrayPUSubgroupsCapacity = ref(arr4); const dataArrayPUDefectsNum = ref(arr5);
+    const dataArrayXMR = ref(arr2); const dataArrayCnP = ref(arr3); const dataArrayPUPTUTSubgroupsCapacity = ref(arr4); const dataArrayPUPTUTDefectsNum = ref(arr5);
 
 
 
@@ -139,7 +139,7 @@ export default {
       if (graphInfo.value.graphType === 'X-R' || graphInfo.value.graphType === 'X-S' || graphInfo.value.graphType === '中位数') console.log(dataArrayXRXSMedium.value)
       if (graphInfo.value.graphType === 'X-MR') console.log(dataArrayXMR.value)
       if (graphInfo.value.graphType === 'C' || graphInfo.value.graphType === 'nP') console.log(dataArrayCnP.value)
-      if (graphInfo.value.graphType === 'P' || graphInfo.value.graphType === 'U') console.log(dataArrayPUSubgroupsCapacity.value, dataArrayPUDefectsNum.value)
+      if (graphInfo.value.graphType === 'P' || graphInfo.value.graphType === 'U' || graphInfo.value.graphType === 'P_T' || graphInfo.value.graphType === 'U_T') console.log(dataArrayPUPTUTSubgroupsCapacity.value, dataArrayPUPTUTDefectsNum.value)
 
       axios.post("/spc/draw", {
         graphType: graphInfo.value.graphType,
@@ -151,19 +151,20 @@ export default {
         dataArrayXRXSMedium: dataArrayXRXSMedium.value,
         dataArrayXMR: dataArrayXMR.value,
         dataArrayCnP: dataArrayCnP.value,
-        dataArrayPUSubgroupsCapacity: dataArrayPUSubgroupsCapacity.value,
-        dataArrayPUDefectsNum: dataArrayPUDefectsNum.value,
+        dataArrayPUPTUTSubgroupsCapacity: dataArrayPUPTUTSubgroupsCapacity.value,
+        dataArrayPUPTUTDefectsNum: dataArrayPUPTUTDefectsNum.value,
       }).then((response) => {
         const data = response.data;
         if (data.success) {
           const graphData = ref(data.result);
 
-          if (graphData.value.graphType === 'X-R')                                      router.push({name: 'GraphXR', params:{ graphData: JSON.stringify(graphData.value)} })
-          if (graphData.value.graphType === 'X-S')                                      router.push({name: 'GraphXS', params:{ graphData: JSON.stringify(graphData.value)} })
-          if (graphData.value.graphType === '中位数')                                    router.push({name: 'GraphMedium', params:{ graphData: JSON.stringify(graphData.value)} })
-          if (graphData.value.graphType === 'X-MR')                                     router.push({name: 'GraphXMR', params:{ graphData: JSON.stringify(graphData.value)} })
-          if (graphData.value.graphType === 'P' || graphData.value.graphType === 'U')   router.push({name: 'GraphPU', params:{ graphData: JSON.stringify(graphData.value)} })
-          if (graphData.value.graphType === 'C' || graphData.value.graphType === 'nP')  router.push({name: 'GraphCnP', params:{ graphData: JSON.stringify(graphData.value)} })
+          if (graphData.value.graphType === 'X-R')                                        router.push({name: 'GraphXR', params:{ graphData: JSON.stringify(graphData.value)} })
+          if (graphData.value.graphType === 'X-S')                                        router.push({name: 'GraphXS', params:{ graphData: JSON.stringify(graphData.value)} })
+          if (graphData.value.graphType === '中位数')                                      router.push({name: 'GraphMedium', params:{ graphData: JSON.stringify(graphData.value)} })
+          if (graphData.value.graphType === 'X-MR')                                       router.push({name: 'GraphXMR', params:{ graphData: JSON.stringify(graphData.value)} })
+          if (graphData.value.graphType === 'P' || graphData.value.graphType === 'U')     router.push({name: 'GraphPU', params:{ graphData: JSON.stringify(graphData.value)} })
+          if (graphData.value.graphType === 'P_T' || graphData.value.graphType === 'U_T') router.push({name: 'GraphPTUT', params:{ graphData: JSON.stringify(graphData.value)} })
+          if (graphData.value.graphType === 'C' || graphData.value.graphType === 'nP')    router.push({name: 'GraphCnP', params:{ graphData: JSON.stringify(graphData.value)} })
         } else {
           message.error("返回计算及分析结果出错！");
         }
@@ -173,7 +174,7 @@ export default {
 
     const handleClear = () => {
       for (let i = 0; i < Number(graphInfo.value.subgroupTotal); i++) {
-        (dataArrayXMR.value)[i] = null; (dataArrayCnP.value)[i] = null; (dataArrayPUSubgroupsCapacity.value)[i] = null; (dataArrayPUDefectsNum.value)[i] = null;
+        (dataArrayXMR.value)[i] = null; (dataArrayCnP.value)[i] = null; (dataArrayPUPTUTSubgroupsCapacity.value)[i] = null; (dataArrayPUPTUTDefectsNum.value)[i] = null;
         for (let j = 0; j < Number(graphInfo.value.subgroupCapacity); j++) {
           (dataArrayXRXSMedium.value)[i][j] = null;
         }
@@ -195,8 +196,8 @@ export default {
       dataArrayXRXSMedium,
       dataArrayXMR,
       dataArrayCnP,
-      dataArrayPUSubgroupsCapacity,
-      dataArrayPUDefectsNum,
+      dataArrayPUPTUTSubgroupsCapacity,
+      dataArrayPUPTUTDefectsNum,
     }
   }
 }
