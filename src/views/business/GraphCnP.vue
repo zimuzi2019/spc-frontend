@@ -10,6 +10,7 @@
       <a-descriptions-item label="平均不良率">{{graphData.avgDefectNum}}</a-descriptions-item>
       <a-descriptions-item label="上限值UCL">{{graphData.ucl}}</a-descriptions-item>
       <a-descriptions-item label="下限值UCL">{{graphData.lcl}}</a-descriptions-item>
+      <a-descriptions-item label="分位数">{{graphData.quantile}}</a-descriptions-item>
     </a-descriptions>
     <a-descriptions bordered style="margin: 5px">
       <a-descriptions-item label="计数值数据直方图">

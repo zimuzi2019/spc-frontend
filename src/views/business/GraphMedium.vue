@@ -23,6 +23,7 @@
      <a-descriptions-item label="上限值 UCL (R)">{{graphData.uclR}}</a-descriptions-item>
      <a-descriptions-item label="中心限 CL (R)">{{graphData.clR}}</a-descriptions-item>
      <a-descriptions-item label="下限值 LCL (R)">{{graphData.lclR}}</a-descriptions-item>
+     <a-descriptions-item label="分位数">{{graphData.quantile}}</a-descriptions-item>
      <a-descriptions-item label="标准偏差">{{graphData.sigma}}</a-descriptions-item>
      <a-descriptions-item label="Pp">{{graphData.pp}}</a-descriptions-item>
      <a-descriptions-item label="Ppk">{{graphData.ppk}}</a-descriptions-item>

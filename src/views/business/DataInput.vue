@@ -23,6 +23,10 @@
     <a-descriptions-item label="规范下限（LSL）" v-if="graphInfo.graphType === 'X-R' || graphInfo.graphType === 'X-S' || graphInfo.graphType === '中位数' || graphInfo.graphType === 'X-MR'">
       {{ graphInfo.LSL }}
     </a-descriptions-item>
+
+    <a-descriptions-item label="分位数" v-if="(graphInfo.graphType === 'X-R'|| graphInfo.graphType === 'X-S' || graphInfo.graphType === '中位数' || graphInfo.graphType === 'X-MR' || graphInfo.graphType === 'P' || graphInfo.graphType === 'nP' || graphInfo.graphType === 'C' || graphInfo.graphType === 'U')">
+      {{ graphInfo.quantile }}
+    </a-descriptions-item>
   </a-descriptions>
 
 
@@ -147,6 +151,7 @@ export default {
         subgroupCapacity: graphInfo.value.subgroupCapacity,
         usl: graphInfo.value.USL,
         lsl: graphInfo.value.LSL,
+        quantile: graphInfo.value.quantile,
         sl: SL.value,
         dataArrayXRXSMedium: dataArrayXRXSMedium.value,
         dataArrayXMR: dataArrayXMR.value,

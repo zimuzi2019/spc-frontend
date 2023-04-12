@@ -67,6 +67,13 @@
             <a-input v-model:value = "graphInfo.subgroupCapacity" placeholder="请输入子组容量（如：50）" type="number"/>
           </a-form-item>
 
+          <a-form-item label="分位数" v-if="(graphInfo.graphType === 'X-R'|| graphInfo.graphType === 'X-S' || graphInfo.graphType === '中位数' || graphInfo.graphType === 'X-MR' || graphInfo.graphType === 'P' || graphInfo.graphType === 'nP' || graphInfo.graphType === 'C' || graphInfo.graphType === 'U')">
+            <a-select v-model:value = "graphInfo.quantile" placeholder="请选择是否使用分位数计算控制限">
+              <a-select-option value="使用">使用</a-select-option>
+              <a-select-option value="不使用">不使用</a-select-option>
+            </a-select>
+          </a-form-item>
+
           <a-form-item label="规范上限值（USL）" v-if="(graphInfo.graphType === 'X-R'|| graphInfo.graphType === 'X-S' || graphInfo.graphType === '中位数' || graphInfo.graphType === 'X-MR')">
             <a-input v-model:value = "graphInfo.USL" placeholder="请输入规范上限值USL（如：200.0312）" type="number"/>
           </a-form-item>
@@ -119,6 +126,7 @@ export default defineComponent({
       console.log(graphInfo.value)
 
       // 表单填写内容校验
+      // 这里暂时就不校验分位数栏有无填写了
       let isLegal = true
 
       if( !graphInfo.value.graphType || !graphInfo.value.subgroupTotal ) {

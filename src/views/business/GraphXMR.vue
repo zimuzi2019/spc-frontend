@@ -21,6 +21,7 @@
       <a-descriptions-item label="上限值 UCL (MR)">{{graphData.uclMR}}</a-descriptions-item>
       <a-descriptions-item label="中心限 CL (MR)">{{graphData.clMR}}</a-descriptions-item>
       <a-descriptions-item label="下限值 LCL (MR)">{{graphData.lclMR}}</a-descriptions-item>
+      <a-descriptions-item label="分位数">{{graphData.quantile}}</a-descriptions-item>
       <a-descriptions-item label="标准偏差">{{graphData.sigma}}</a-descriptions-item>
       <a-descriptions-item label="Pp">{{graphData.pp}}</a-descriptions-item>
       <a-descriptions-item label="Ppk">{{graphData.ppk}}</a-descriptions-item>
@@ -32,7 +33,7 @@
       <a-descriptions-item label="Cpk Grade">{{graphData.cpkGrade}}</a-descriptions-item>
     </a-descriptions>
 
-    <a-descriptions>
+    <a-descriptions bordered style="margin: 5px">
       <a-descriptions-item label="数据分布直方图">
         <div class="chart-container">
           <div class="chart" id="barChart"></div>

@@ -10,6 +10,7 @@
       <a-descriptions-item label="总样本数">{{graphData.samplesNum}}</a-descriptions-item>
       <a-descriptions-item label="总不良品数">{{graphData.defectsNum}}</a-descriptions-item>
       <a-descriptions-item label="平均不良率">{{graphData.avgDefectsNum}}</a-descriptions-item>
+      <a-descriptions-item label="分位数">{{graphData.quantile}}</a-descriptions-item>
     </a-descriptions>
 
     <br/>
@@ -139,34 +140,6 @@ export default {
 
         series: [
           {
-            name: '中心限CL',
-            data: [],
-            type: 'line',
-            itemStyle: {
-              color: '#0000ff'
-            },
-            markLine: {
-              symbol: 'none',
-              precision: 3,
-              data: [
-                {
-                  name: 'CL',
-                  yAxis: graphData.value.cl,
-                  lineStyle: {
-                    color: '#0000ff',
-                    width: 2,
-                  },
-                  label: {
-                    color: '#0000ff',
-                    fontWeight: 'bold',
-                    fontSize: '10',
-                    formatter: '{b}  {c}'
-                  }
-                },
-              ]
-            }
-          },
-          {
             name: '上限值UCL',
             data: graphData.value.ucl,
             type: 'line',
@@ -187,6 +160,16 @@ export default {
             },
             lineStyle: {
               color: '#ff00ff',
+              width: 1,
+            },
+          },
+          {
+            name: '中心限CL',
+            data: graphData.value.cl,
+            type: 'line',
+            symbol: 'none',
+            lineStyle: {
+              color: '#0000ff',
               width: 1,
             },
           },
