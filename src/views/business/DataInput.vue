@@ -8,7 +8,7 @@
     <a-descriptions-item label="控制图类型">{{ graphTypeText }}</a-descriptions-item>
     <a-descriptions-item label="子组总数">{{ graphInfo.subgroupTotal }}</a-descriptions-item>
 
-    <a-descriptions-item label="子组容量" v-if="graphInfo.graphType === 'X-R' || graphInfo.graphType === 'X-S' || graphInfo.graphType === '中位数' || graphInfo.graphType === 'nP' || graphInfo.graphType === 'C'">
+    <a-descriptions-item label="子组容量" v-if="graphInfo.graphType === 'X-R' || graphInfo.graphType === 'X-S' || graphInfo.graphType === '中位数' || graphInfo.graphType === 'nP' || graphInfo.graphType === 'C' || graphInfo.grapohType === '回归'">
       {{ graphInfo.subgroupCapacity }}
     </a-descriptions-item>
 
@@ -45,7 +45,8 @@
 
 
 
-  <!-- 根据控制图类型决定加载哪种形式的输入格式 -->
+  <!-- 根据控制图类型决定加载哪种形式的输入 -->
+  <!-- X-R图、X-S图、中位数图 -->
   <div v-for="(row, index1) in dataArrayXRXSMedium" :key="index1" v-if="graphInfo.graphType === 'X-R' || graphInfo.graphType === 'X-S' || graphInfo.graphType ==='中位数'">
     <a-divider>子组编号{{ index1+1 }}</a-divider>
     <a-form>
@@ -55,7 +56,7 @@
     </a-form>
   </div>
 
-
+  <!-- X-MR图 -->
   <div v-if="graphInfo.graphType === 'X-MR'">
     <a-divider/>
     <a-form>
@@ -65,6 +66,7 @@
     </a-form>
   </div>
 
+  <!-- C图、nP图 -->
   <div v-if="graphInfo.graphType === 'C' || graphInfo.graphType === 'nP'">
     <a-divider/>
     <a-form>
@@ -74,6 +76,7 @@
     </a-form>
   </div>
 
+  <!-- P图、U图、P_T图、U_T图 -->
   <div v-if="graphInfo.graphType === 'P' || graphInfo.graphType === 'U' || graphInfo.graphType === 'P_T' || graphInfo.graphType === 'U_T'">
     <a-divider/>
     <a-form>
@@ -84,13 +87,31 @@
     </a-form>
   </div>
 
+  <!-- 回归控制图 -->
+  <div v-for="(row, index1) in dataArrayRegression" :key="index1" v-if="graphInfo.graphType ==='回归'">
+    <a-divider>子组编号{{ index1+1 }}</a-divider>
+    <a-form>
+      <a-form-item label="目标值" :label-col="{ span: 3 }" :wrapper-col="{ span: 19 }">
+        <a-input type="number" placeholder="请填入目标值，如：50.00" v-model:value="dataArrayRegressionStandard[index1]"></a-input>
+      </a-form-item>
+      <a-form-item label="精度" :label-col="{ span: 3 }" :wrapper-col="{ span: 19 }">
+        <a-input placeholder="请填入精度，如：0.10%" v-model:value="dataArrayRegressionPrecision[index1]"></a-input>
+      </a-form-item>
+      <a-form-item label="品种编号" :label-col="{ span: 3 }" :wrapper-col="{ span: 19 }">
+        <a-input type="number" placeholder="请填入品种编号，如：2" v-model:value="dataArrayRegressionSort[index1]"></a-input>
+      </a-form-item>
 
+      <br/>
 
-
+      <a-form-item v-for="(item, index2) in row" :label="`样品编号${String(index2+1)}`" :key="index2" :label-col="{ span: 3 }" :wrapper-col="{ span: 19 }">
+        <a-input type="number" placeholder="请填入实际测量值，如：50.12" v-model:value="dataArrayRegression[index1][index2]"></a-input>
+      </a-form-item>
+    </a-form>
+  </div>
 </template>
 
 <script>
-import { onMounted, ref} from "vue";
+import { ref} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import { graphTypeDictionary } from './graphTypeDictionary'
 import axios from "axios";
@@ -120,14 +141,22 @@ export default {
 
     let arr2 = []  // 用于记录X-MR图数据
     let arr3 = []  // 用于记录C、nP图数据
-    let arr4 = []; let arr5 = [];  // 用于记录P、U、PT、UT图数据  arr4：子组容量 arr5：次品缺陷数量
+    let arr4 = []; let arr5 = [];  // 用于记录P、U、P_T、U_T图数据  arr4：子组容量 arr5：次品缺陷数量
     for (let i = 0; i < Number(graphInfo.value.subgroupTotal); i++) {
       arr2.push(null); arr3.push(null); arr4.push(null); arr5.push(null);
     }
     const dataArrayXMR = ref(arr2); const dataArrayCnP = ref(arr3); const dataArrayPUPTUTSubgroupsCapacity = ref(arr4); const dataArrayPUPTUTDefectsNum = ref(arr5);
 
 
+    let arr6 = [];   let arr7 = [];  let arr8 = []; let arr9 = [];// 用于记录回归控制图数据 arr6：测量数据 arr7：目标值  arr8：精度 arr9：品种编号
+    for (let i = 0; i < Number(graphInfo.value.subgroupTotal); i++) {
+      let temp = []
+      for (let j = 0; j < Number(graphInfo.value.subgroupCapacity); j++) temp.push(null);
+      arr6.push(temp);
 
+      arr7.push(null); arr8.push(null); arr9.push(null);
+    }
+    const dataArrayRegression = ref(arr6); const dataArrayRegressionStandard = ref(arr7); const dataArrayRegressionPrecision = ref(arr8); const dataArrayRegressionSort = ref(arr9);
 
 
 
@@ -140,11 +169,7 @@ export default {
 
 
     const handleSubmit = () => {
-      if (graphInfo.value.graphType === 'X-R' || graphInfo.value.graphType === 'X-S' || graphInfo.value.graphType === '中位数') console.log(dataArrayXRXSMedium.value)
-      if (graphInfo.value.graphType === 'X-MR') console.log(dataArrayXMR.value)
-      if (graphInfo.value.graphType === 'C' || graphInfo.value.graphType === 'nP') console.log(dataArrayCnP.value)
-      if (graphInfo.value.graphType === 'P' || graphInfo.value.graphType === 'U' || graphInfo.value.graphType === 'P_T' || graphInfo.value.graphType === 'U_T') console.log(dataArrayPUPTUTSubgroupsCapacity.value, dataArrayPUPTUTDefectsNum.value)
-
+      console.log(dataArrayRegressionPrecision.value)
       axios.post("/spc/draw", {
         graphType: graphInfo.value.graphType,
         subgroupTotal: graphInfo.value.subgroupTotal,
@@ -158,6 +183,11 @@ export default {
         dataArrayCnP: dataArrayCnP.value,
         dataArrayPUPTUTSubgroupsCapacity: dataArrayPUPTUTSubgroupsCapacity.value,
         dataArrayPUPTUTDefectsNum: dataArrayPUPTUTDefectsNum.value,
+
+        dataArrayRegression: dataArrayRegression.value,
+        dataArrayRegressionStandard: dataArrayRegressionStandard.value,
+        dataArrayRegressionPrecision: dataArrayRegressionPrecision.value,
+        dataArrayRegressionSort: dataArrayRegressionSort.value,
       }).then((response) => {
         const data = response.data;
         if (data.success) {
@@ -170,6 +200,7 @@ export default {
           if (graphData.value.graphType === 'P' || graphData.value.graphType === 'U')     router.push({name: 'GraphPU', params:{ graphData: JSON.stringify(graphData.value)} })
           if (graphData.value.graphType === 'P_T' || graphData.value.graphType === 'U_T') router.push({name: 'GraphPTUT', params:{ graphData: JSON.stringify(graphData.value)} })
           if (graphData.value.graphType === 'C' || graphData.value.graphType === 'nP')    router.push({name: 'GraphCnP', params:{ graphData: JSON.stringify(graphData.value)} })
+          if (graphData.value.graphType === '回归')                                        router.push({name: 'GraphRegression', params:{ graphData: JSON.stringify(graphData.value)} })
         } else {
           message.error("返回计算及分析结果出错！");
         }
@@ -180,15 +211,13 @@ export default {
     const handleClear = () => {
       for (let i = 0; i < Number(graphInfo.value.subgroupTotal); i++) {
         (dataArrayXMR.value)[i] = null; (dataArrayCnP.value)[i] = null; (dataArrayPUPTUTSubgroupsCapacity.value)[i] = null; (dataArrayPUPTUTDefectsNum.value)[i] = null;
+        (dataArrayRegressionStandard.value)[i] = null; (dataArrayRegressionPrecision.value)[i] = null; (dataArrayRegressionSort.value)[i] = null;
+
         for (let j = 0; j < Number(graphInfo.value.subgroupCapacity); j++) {
-          (dataArrayXRXSMedium.value)[i][j] = null;
+          (dataArrayXRXSMedium.value)[i][j] = null; (dataArrayRegression.value)[i][j] = null;
         }
       }
     }
-
-    onMounted(() => {
-      console.log(graphInfo.value)
-    })
 
     return {
       graphInfo,
@@ -203,6 +232,11 @@ export default {
       dataArrayCnP,
       dataArrayPUPTUTSubgroupsCapacity,
       dataArrayPUPTUTDefectsNum,
+
+      dataArrayRegression,
+      dataArrayRegressionStandard,
+      dataArrayRegressionPrecision,
+      dataArrayRegressionSort,
     }
   }
 }
