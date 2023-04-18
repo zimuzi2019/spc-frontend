@@ -63,7 +63,7 @@
             <a-input v-model:value = "graphInfo.subgroupTotal" placeholder="请输入子组总数（如：100）" type="number"/>
           </a-form-item>
 
-          <a-form-item label="子组容量" v-if="(graphInfo.graphType === 'X-R'|| graphInfo.graphType === 'X-S' || graphInfo.graphType === '中位数' || graphInfo.graphType === 'nP' || graphInfo.graphType === 'C' || graphInfo.graphType === '回归')" type="number">
+          <a-form-item label="子组容量" v-if="(graphInfo.graphType === 'X-R'|| graphInfo.graphType === 'X-S' || graphInfo.graphType === '中位数' || graphInfo.graphType === 'nP' || graphInfo.graphType === 'C' || graphInfo.graphType === '回归' || graphInfo.graphType === 'T-K')" type="number">
             <a-input v-model:value = "graphInfo.subgroupCapacity" placeholder="请输入子组容量（如：50）" type="number"/>
           </a-form-item>
 
@@ -180,6 +180,7 @@ export default defineComponent({
           if (graphData.value.graphType === 'P_T' || graphData.value.graphType === 'U_T')   router.push({name: 'GraphPTUT', params:{ graphData: JSON.stringify(graphData.value)} })
           if (graphData.value.graphType === 'C' || graphData.value.graphType === 'nP')      router.push({name: 'GraphCnP', params:{ graphData: JSON.stringify(graphData.value)} })
           if (graphData.value.graphType === '回归')                                          router.push({name: 'GraphRegression', params:{ graphData: JSON.stringify(graphData.value)} })
+          if (graphData.value.graphType === 'T-K')                                          router.push({name: 'GraphTK', params:{ graphData: JSON.stringify(graphData.value)} })
         } else {
           message.error("返回计算及分析结果出错！");
         }

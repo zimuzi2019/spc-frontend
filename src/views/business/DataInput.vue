@@ -88,23 +88,23 @@
   </div>
 
   <!-- 回归控制图 -->
-  <div v-for="(row, index1) in dataArrayRegression" :key="index1" v-if="graphInfo.graphType ==='回归'">
+  <div v-for="(row, index1) in dataArrayRegressionTK" :key="index1" v-if="graphInfo.graphType ==='回归' || graphInfo.graphType === 'T-K'">
     <a-divider>子组编号{{ index1+1 }}</a-divider>
     <a-form>
       <a-form-item label="目标值" :label-col="{ span: 3 }" :wrapper-col="{ span: 19 }">
-        <a-input type="number" placeholder="请填入目标值，如：50.00" v-model:value="dataArrayRegressionStandard[index1]"></a-input>
+        <a-input type="number" placeholder="请填入目标值，如：50.00" v-model:value="dataArrayRegressionTKStandard[index1]"></a-input>
       </a-form-item>
       <a-form-item label="精度" :label-col="{ span: 3 }" :wrapper-col="{ span: 19 }">
-        <a-input placeholder="请填入精度，如：0.10%" v-model:value="dataArrayRegressionPrecision[index1]"></a-input>
+        <a-input placeholder="请填入精度，如：0.10%" v-model:value="dataArrayRegressionTKPrecision[index1]"></a-input>
       </a-form-item>
       <a-form-item label="品种编号" :label-col="{ span: 3 }" :wrapper-col="{ span: 19 }">
-        <a-input type="number" placeholder="请填入品种编号，如：2" v-model:value="dataArrayRegressionSort[index1]"></a-input>
+        <a-input type="number" placeholder="请填入品种编号，如：2" v-model:value="dataArrayRegressionTKSort[index1]"></a-input>
       </a-form-item>
 
       <br/>
 
       <a-form-item v-for="(item, index2) in row" :label="`样品编号${String(index2+1)}`" :key="index2" :label-col="{ span: 3 }" :wrapper-col="{ span: 19 }">
-        <a-input type="number" placeholder="请填入实际测量值，如：50.12" v-model:value="dataArrayRegression[index1][index2]"></a-input>
+        <a-input type="number" placeholder="请填入实际测量值，如：50.12" v-model:value="dataArrayRegressionTK[index1][index2]"></a-input>
       </a-form-item>
     </a-form>
   </div>
@@ -156,7 +156,7 @@ export default {
 
       arr7.push(null); arr8.push(null); arr9.push(null);
     }
-    const dataArrayRegression = ref(arr6); const dataArrayRegressionStandard = ref(arr7); const dataArrayRegressionPrecision = ref(arr8); const dataArrayRegressionSort = ref(arr9);
+    const dataArrayRegressionTK = ref(arr6); const dataArrayRegressionTKStandard = ref(arr7); const dataArrayRegressionTKPrecision = ref(arr8); const dataArrayRegressionTKSort = ref(arr9);
 
 
 
@@ -169,7 +169,7 @@ export default {
 
 
     const handleSubmit = () => {
-      console.log(dataArrayRegressionPrecision.value)
+      console.log(dataArrayRegressionTKPrecision.value)
       axios.post("/spc/draw", {
         graphType: graphInfo.value.graphType,
         subgroupTotal: graphInfo.value.subgroupTotal,
@@ -184,10 +184,10 @@ export default {
         dataArrayPUPTUTSubgroupsCapacity: dataArrayPUPTUTSubgroupsCapacity.value,
         dataArrayPUPTUTDefectsNum: dataArrayPUPTUTDefectsNum.value,
 
-        dataArrayRegression: dataArrayRegression.value,
-        dataArrayRegressionStandard: dataArrayRegressionStandard.value,
-        dataArrayRegressionPrecision: dataArrayRegressionPrecision.value,
-        dataArrayRegressionSort: dataArrayRegressionSort.value,
+        dataArrayRegressionTK: dataArrayRegressionTK.value,
+        dataArrayRegressionTKStandard: dataArrayRegressionTKStandard.value,
+        dataArrayRegressionTKPrecision: dataArrayRegressionTKPrecision.value,
+        dataArrayRegressionTKSort: dataArrayRegressionTKSort.value,
       }).then((response) => {
         const data = response.data;
         if (data.success) {
@@ -201,6 +201,7 @@ export default {
           if (graphData.value.graphType === 'P_T' || graphData.value.graphType === 'U_T') router.push({name: 'GraphPTUT', params:{ graphData: JSON.stringify(graphData.value)} })
           if (graphData.value.graphType === 'C' || graphData.value.graphType === 'nP')    router.push({name: 'GraphCnP', params:{ graphData: JSON.stringify(graphData.value)} })
           if (graphData.value.graphType === '回归')                                        router.push({name: 'GraphRegression', params:{ graphData: JSON.stringify(graphData.value)} })
+          if (graphData.value.graphType === 'T-K')                                        router.push({name: 'GraphTK', params:{ graphData: JSON.stringify(graphData.value)} })
         } else {
           message.error("返回计算及分析结果出错！");
         }
@@ -211,10 +212,10 @@ export default {
     const handleClear = () => {
       for (let i = 0; i < Number(graphInfo.value.subgroupTotal); i++) {
         (dataArrayXMR.value)[i] = null; (dataArrayCnP.value)[i] = null; (dataArrayPUPTUTSubgroupsCapacity.value)[i] = null; (dataArrayPUPTUTDefectsNum.value)[i] = null;
-        (dataArrayRegressionStandard.value)[i] = null; (dataArrayRegressionPrecision.value)[i] = null; (dataArrayRegressionSort.value)[i] = null;
+        (dataArrayRegressionTKStandard.value)[i] = null; (dataArrayRegressionTKPrecision.value)[i] = null; (dataArrayRegressionTKSort.value)[i] = null;
 
         for (let j = 0; j < Number(graphInfo.value.subgroupCapacity); j++) {
-          (dataArrayXRXSMedium.value)[i][j] = null; (dataArrayRegression.value)[i][j] = null;
+          (dataArrayXRXSMedium.value)[i][j] = null; (dataArrayRegressionTK.value)[i][j] = null;
         }
       }
     }
@@ -233,10 +234,10 @@ export default {
       dataArrayPUPTUTSubgroupsCapacity,
       dataArrayPUPTUTDefectsNum,
 
-      dataArrayRegression,
-      dataArrayRegressionStandard,
-      dataArrayRegressionPrecision,
-      dataArrayRegressionSort,
+      dataArrayRegressionTK,
+      dataArrayRegressionTKStandard,
+      dataArrayRegressionTKPrecision,
+      dataArrayRegressionTKSort,
     }
   }
 }
