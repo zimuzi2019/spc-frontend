@@ -13,6 +13,7 @@ export const graphTypeDictionary = {
     "回归控制图",
     "T-K控制图",
     "一阶嵌套控制图",
+    "单值多变量T^2控制图",
   ],
   graphDictionaryValue: [
     "X-R",
@@ -28,5 +29,6 @@ export const graphTypeDictionary = {
     "回归",
     "T-K",
     "一阶嵌套",
+    "单值多变量T^2",
   ],
 };

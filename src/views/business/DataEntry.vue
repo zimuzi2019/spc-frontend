@@ -67,6 +67,10 @@
             <a-input v-model:value = "graphInfo.subgroupCapacity" placeholder="请输入子组容量（如：50）" type="number"/>
           </a-form-item>
 
+          <a-form-item label="变量个数" v-if="graphInfo.graphType ==='单值多变量T^2'">
+            <a-input v-model:value = "graphInfo.varNum" placeholder="请输入变量个数（如：3）" type="number"/>
+          </a-form-item>
+
           <a-form-item label="分位数" v-if="(graphInfo.graphType === 'X-R'|| graphInfo.graphType === 'X-S' || graphInfo.graphType === '中位数' || graphInfo.graphType === 'X-MR' || graphInfo.graphType === 'P' || graphInfo.graphType === 'nP' || graphInfo.graphType === 'C' || graphInfo.graphType === 'U')">
             <a-select v-model:value = "graphInfo.quantile" placeholder="请选择是否使用分位数计算控制限">
               <a-select-option value="使用">使用</a-select-option>
@@ -126,7 +130,7 @@ export default defineComponent({
       console.log(graphInfo.value)
 
       // 表单填写内容校验
-      // 这里暂时就不校验分位数栏有无填写了
+      // 这里暂时就不校验分位数栏有无填写、变量个数是否是整数了
       let isLegal = true
 
       if( !graphInfo.value.graphType || !graphInfo.value.subgroupTotal ) {
@@ -183,6 +187,7 @@ export default defineComponent({
           if (graphData.value.graphType === '回归')  router.push({name: 'GraphRegression', params:{ graphData: JSON.stringify(graphData.value)} })
           if (graphData.value.graphType === 'T-K') router.push({name: 'GraphTK', params:{ graphData: JSON.stringify(graphData.value)} })
           if (graphData.value.graphType === '一阶嵌套') router.push({name: 'GraphFirstOrderNested', params:{ graphData: JSON.stringify(graphData.value)} })
+          if (graphData.value.graphType === '单值多变量T^2') router.push({name: 'GraphT2Single', params:{ graphData: JSON.stringify(graphData.value)} })
         } else {
           message.error("返回计算及分析结果出错！");
         }

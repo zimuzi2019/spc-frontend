@@ -12,7 +12,9 @@
       {{ graphInfo.subgroupCapacity }}
     </a-descriptions-item>
 
-
+    <a-descriptions-item label="变量个数" v-if="graphInfo.graphType === '单值多变量T^2'">
+      {{ graphInfo.varNum }}
+    </a-descriptions-item>
 
     <a-descriptions-item label="规范上限（USL）" v-if="graphInfo.graphType === 'X-R' || graphInfo.graphType === 'X-S' || graphInfo.graphType === '中位数' || graphInfo.graphType === 'X-MR'">
       {{ graphInfo.USL }}
@@ -114,7 +116,17 @@
     <a-divider>子组编号{{ index1+1 }}</a-divider>
     <a-form>
       <a-form-item v-for="(item, index2) in row" :label="`样品编号${String(index2+1)}`" :key="index2" :label-col="{ span: 3 }" :wrapper-col="{ span: 19 }">
-        <a-input type="number" placeholder="请填入实际测量值，如：50.12" v-model:value="dataArrayXRXSMedium[index1][index2]"></a-input>
+        <a-input type="number" placeholder="请填入实际测量值，如：50.12" v-model:value="dataArrayFirstOrderNested[index1][index2]"></a-input>
+      </a-form-item>
+    </a-form>
+  </div>
+
+  <!-- 单值多变量T^2控制图数据 -->
+  <div v-for="(row, index1) in dataArrayT2Single" :key="index1" v-if="graphInfo.graphType === '单值多变量T^2'">
+    <a-divider>子组编号{{ index1+1 }}</a-divider>
+    <a-form>
+      <a-form-item v-for="(item, index2) in row" :label="`变量编号${String(index2+1)}`" :key="index2" :label-col="{ span: 3 }" :wrapper-col="{ span: 19 }">
+        <a-input type="number" placeholder="请填入实际测量值，如：50.12" v-model:value="dataArrayT2Single[index1][index2]"></a-input>
       </a-form-item>
     </a-form>
   </div>
@@ -176,6 +188,14 @@ export default {
     }
     const dataArrayFirstOrderNested = ref(arr10)
 
+    let arr11 = []   // 用于记录单值多变量T^2控制图数据
+    for (let i = 0; i < Number(graphInfo.value.subgroupTotal); i++) {
+      let temp = []
+      for (let j = 0; j < Number(graphInfo.value.varNum); j++) temp.push(null);
+      arr11.push(temp);
+    }
+    const dataArrayT2Single = ref(arr11)
+
 
     const graphTypeText = ref();
 
@@ -194,6 +214,7 @@ export default {
         usl: graphInfo.value.USL,
         lsl: graphInfo.value.LSL,
         quantile: graphInfo.value.quantile,
+        varNum: graphInfo.value.varNum,
         sl: SL.value,
         dataArrayXRXSMedium: dataArrayXRXSMedium.value,
         dataArrayXMR: dataArrayXMR.value,
@@ -207,6 +228,7 @@ export default {
         dataArrayRegressionTKSort: dataArrayRegressionTKSort.value,
 
         dataArrayFirstOrderNested: dataArrayFirstOrderNested.value,
+        dataArrayT2Single: dataArrayT2Single.value,
       }).then((response) => {
         const data = response.data;
         if (data.success) {
@@ -222,6 +244,7 @@ export default {
           if (graphData.value.graphType === '回归')                                        router.push({name: 'GraphRegression', params:{ graphData: JSON.stringify(graphData.value)} })
           if (graphData.value.graphType === 'T-K')                                        router.push({name: 'GraphTK', params:{ graphData: JSON.stringify(graphData.value)} })
           if (graphData.value.graphType === '一阶嵌套') router.push({name: 'GraphFirstOrderNested', params:{ graphData: JSON.stringify(graphData.value)} })
+          if (graphData.value.graphType === '单值多变量T^2') router.push({name: 'GraphT2Single', params:{ graphData: JSON.stringify(graphData.value)} })
         } else {
           message.error("返回计算及分析结果出错！");
         }
@@ -235,7 +258,7 @@ export default {
         (dataArrayRegressionTKStandard.value)[i] = null; (dataArrayRegressionTKPrecision.value)[i] = null; (dataArrayRegressionTKSort.value)[i] = null;
 
         for (let j = 0; j < Number(graphInfo.value.subgroupCapacity); j++) {
-          (dataArrayXRXSMedium.value)[i][j] = null; (dataArrayRegressionTK.value)[i][j] = null; (dataArrayFirstOrderNested.value)[i][j] = null;
+          (dataArrayXRXSMedium.value)[i][j] = null; (dataArrayRegressionTK.value)[i][j] = null; (dataArrayFirstOrderNested.value)[i][j] = null; (dataArrayT2Single)[i][j] = null;
         }
       }
     }
@@ -260,6 +283,8 @@ export default {
       dataArrayRegressionTKSort,
 
       dataArrayFirstOrderNested,
+
+      dataArrayT2Single,
     }
   }
 }
