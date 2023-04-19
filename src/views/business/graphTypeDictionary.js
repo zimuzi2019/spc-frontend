@@ -11,7 +11,8 @@ export const graphTypeDictionary = {
     "单位缺陷数控制图（u图）",
     "通用单位缺陷数控制图（u_T图）",
     "回归控制图",
-    "T-K控制图"
+    "T-K控制图",
+    "一阶嵌套控制图",
   ],
   graphDictionaryValue: [
     "X-R",
@@ -25,6 +26,7 @@ export const graphTypeDictionary = {
     "U",
     "U_T",
     "回归",
-    "T-K"
+    "T-K",
+    "一阶嵌套",
   ],
 };

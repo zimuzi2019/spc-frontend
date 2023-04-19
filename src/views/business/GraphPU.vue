@@ -125,9 +125,9 @@ export default {
 
         yAxis: {
           type: 'value',
-          min: 0,
-          max: graphData.value.graduation,
-          interval: 0.1,
+          // min: 0,
+          // max: graphData.value.graduation,
+          // interval: 0.1,
           name: '单位不良品率',
           nameLocation: 'center',
           nameGap: 40,

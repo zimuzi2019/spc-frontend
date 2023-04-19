@@ -232,9 +232,9 @@ export default {
 
         yAxis: {
           type: 'value',
-          min: 0,
-          max: graphData.value.graduation - (graphData.value.graduation % 5) + 5,
-          interval: 5,
+          // min: 0,
+          // max: graphData.value.graduation - (graphData.value.graduation % 5) + 5,
+          // interval: 5,
           name: '不良品数量/缺陷数量',
           nameLocation: 'center',
           nameGap: 40,

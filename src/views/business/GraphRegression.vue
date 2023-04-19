@@ -163,6 +163,8 @@ export default {
             fontWeight: 'bold',
             fontSize: 15
           },
+
+          // 为了显示UCL和LCL保留
           max: graphData.value.graduationXBar - (graphData.value.graduationXBar % 1) + 1,
           min: -(graphData.value.graduationXBar - (graphData.value.graduationXBar % 1) + 1),
           interval: 1

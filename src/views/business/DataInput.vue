@@ -8,7 +8,7 @@
     <a-descriptions-item label="控制图类型">{{ graphTypeText }}</a-descriptions-item>
     <a-descriptions-item label="子组总数">{{ graphInfo.subgroupTotal }}</a-descriptions-item>
 
-    <a-descriptions-item label="子组容量" v-if="graphInfo.graphType === 'X-R' || graphInfo.graphType === 'X-S' || graphInfo.graphType === '中位数' || graphInfo.graphType === 'nP' || graphInfo.graphType === 'C' || graphInfo.grapohType === '回归'">
+    <a-descriptions-item label="子组容量" v-if="graphInfo.graphType === 'X-R' || graphInfo.graphType === 'X-S' || graphInfo.graphType === '中位数' || graphInfo.graphType === 'nP' || graphInfo.graphType === 'C' || graphInfo.grapohType === '回归' || graphInfo.grapohType === 'T-K' || graphInfo.graphType === '一阶嵌套'">
       {{ graphInfo.subgroupCapacity }}
     </a-descriptions-item>
 
@@ -108,6 +108,16 @@
       </a-form-item>
     </a-form>
   </div>
+
+  <!-- 一阶嵌套控制图数据 -->
+  <div v-for="(row, index1) in dataArrayFirstOrderNested" :key="index1" v-if="graphInfo.graphType === '一阶嵌套'">
+    <a-divider>子组编号{{ index1+1 }}</a-divider>
+    <a-form>
+      <a-form-item v-for="(item, index2) in row" :label="`样品编号${String(index2+1)}`" :key="index2" :label-col="{ span: 3 }" :wrapper-col="{ span: 19 }">
+        <a-input type="number" placeholder="请填入实际测量值，如：50.12" v-model:value="dataArrayXRXSMedium[index1][index2]"></a-input>
+      </a-form-item>
+    </a-form>
+  </div>
 </template>
 
 <script>
@@ -158,6 +168,13 @@ export default {
     }
     const dataArrayRegressionTK = ref(arr6); const dataArrayRegressionTKStandard = ref(arr7); const dataArrayRegressionTKPrecision = ref(arr8); const dataArrayRegressionTKSort = ref(arr9);
 
+    let arr10 = []   // 用于记录一阶嵌套控制图数据
+    for (let i = 0; i < Number(graphInfo.value.subgroupTotal); i++) {
+      let temp = []
+      for (let j = 0; j < Number(graphInfo.value.subgroupCapacity); j++) temp.push(null);
+      arr10.push(temp);
+    }
+    const dataArrayFirstOrderNested = ref(arr10)
 
 
     const graphTypeText = ref();
@@ -188,6 +205,8 @@ export default {
         dataArrayRegressionTKStandard: dataArrayRegressionTKStandard.value,
         dataArrayRegressionTKPrecision: dataArrayRegressionTKPrecision.value,
         dataArrayRegressionTKSort: dataArrayRegressionTKSort.value,
+
+        dataArrayFirstOrderNested: dataArrayFirstOrderNested.value,
       }).then((response) => {
         const data = response.data;
         if (data.success) {
@@ -202,6 +221,7 @@ export default {
           if (graphData.value.graphType === 'C' || graphData.value.graphType === 'nP')    router.push({name: 'GraphCnP', params:{ graphData: JSON.stringify(graphData.value)} })
           if (graphData.value.graphType === '回归')                                        router.push({name: 'GraphRegression', params:{ graphData: JSON.stringify(graphData.value)} })
           if (graphData.value.graphType === 'T-K')                                        router.push({name: 'GraphTK', params:{ graphData: JSON.stringify(graphData.value)} })
+          if (graphData.value.graphType === '一阶嵌套') router.push({name: 'GraphFirstOrderNested', params:{ graphData: JSON.stringify(graphData.value)} })
         } else {
           message.error("返回计算及分析结果出错！");
         }
@@ -215,7 +235,7 @@ export default {
         (dataArrayRegressionTKStandard.value)[i] = null; (dataArrayRegressionTKPrecision.value)[i] = null; (dataArrayRegressionTKSort.value)[i] = null;
 
         for (let j = 0; j < Number(graphInfo.value.subgroupCapacity); j++) {
-          (dataArrayXRXSMedium.value)[i][j] = null; (dataArrayRegressionTK.value)[i][j] = null;
+          (dataArrayXRXSMedium.value)[i][j] = null; (dataArrayRegressionTK.value)[i][j] = null; (dataArrayFirstOrderNested.value)[i][j] = null;
         }
       }
     }
@@ -238,6 +258,8 @@ export default {
       dataArrayRegressionTKStandard,
       dataArrayRegressionTKPrecision,
       dataArrayRegressionTKSort,
+
+      dataArrayFirstOrderNested,
     }
   }
 }

@@ -308,9 +308,9 @@ export default {
             fontWeight: 'bold',
             fontSize: 15
           },
-          min: 0,
-          max: graphData.value.graduationXMedium - (graphData.value.graduationXMedium % 50) + 50,
-          interval: 50
+          // min: 0,
+          // max: graphData.value.graduationXMedium - (graphData.value.graduationXMedium % 50) + 50,
+          // interval: 50
         },
 
         series: [
@@ -459,9 +459,9 @@ export default {
             fontWeight: 'bold',
             fontSize: 15
           },
-          min: 0,
-          max: graphData.value.graduationR - (graphData.value.graduationR % 50) + 50,
-          interval: 50
+          // min: 0,
+          // max: graphData.value.graduationR - (graphData.value.graduationR % 50) + 50,
+          // interval: 50
         },
 
         series: [
