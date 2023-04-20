@@ -63,7 +63,8 @@
             <a-input v-model:value = "graphInfo.subgroupTotal" placeholder="请输入子组总数（如：100）" type="number"/>
           </a-form-item>
 
-          <a-form-item label="子组容量" v-if="(graphInfo.graphType === 'X-R'|| graphInfo.graphType === 'X-S' || graphInfo.graphType === '中位数' || graphInfo.graphType === 'nP' || graphInfo.graphType === 'C' || graphInfo.graphType === '回归' || graphInfo.graphType === 'T-K' || graphInfo.graphType === '一阶嵌套')" type="number">
+          <!-- 综合控制图只做了 ”嵌套-回归“控制图作为demo -->
+          <a-form-item label="子组容量" v-if="(graphInfo.graphType === 'X-R'|| graphInfo.graphType === 'X-S' || graphInfo.graphType === '中位数' || graphInfo.graphType === 'nP' || graphInfo.graphType === 'C' || graphInfo.graphType === '回归' || graphInfo.graphType === 'T-K' || graphInfo.graphType === '一阶嵌套' || graphInfo.graphType === '综合')" type="number">
             <a-input v-model:value = "graphInfo.subgroupCapacity" placeholder="请输入子组容量（如：50）" type="number"/>
           </a-form-item>
 
@@ -188,6 +189,10 @@ export default defineComponent({
           if (graphData.value.graphType === 'T-K') router.push({name: 'GraphTK', params:{ graphData: JSON.stringify(graphData.value)} })
           if (graphData.value.graphType === '一阶嵌套') router.push({name: 'GraphFirstOrderNested', params:{ graphData: JSON.stringify(graphData.value)} })
           if (graphData.value.graphType === '单值多变量T^2') router.push({name: 'GraphT2Single', params:{ graphData: JSON.stringify(graphData.value)} })
+
+          // ---- 此处的综合控制图只做了”嵌套-回归“控制图作为demo，实际情况应该更复杂 ---
+          if (graphData.value.graphType === '综合') router.push({name: 'GraphIntegratedDemo', params:{ graphData: JSON.stringify(graphData.value)} })
+          // ------------------------------------------------------------------
         } else {
           message.error("返回计算及分析结果出错！");
         }

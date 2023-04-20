@@ -8,7 +8,8 @@
     <a-descriptions-item label="控制图类型">{{ graphTypeText }}</a-descriptions-item>
     <a-descriptions-item label="子组总数">{{ graphInfo.subgroupTotal }}</a-descriptions-item>
 
-    <a-descriptions-item label="子组容量" v-if="graphInfo.graphType === 'X-R' || graphInfo.graphType === 'X-S' || graphInfo.graphType === '中位数' || graphInfo.graphType === 'nP' || graphInfo.graphType === 'C' || graphInfo.grapohType === '回归' || graphInfo.grapohType === 'T-K' || graphInfo.graphType === '一阶嵌套'">
+    <!-- 综合控制图只做了”嵌套-回归“控制图作为demo -->
+    <a-descriptions-item label="子组容量" v-if="graphInfo.graphType === 'X-R' || graphInfo.graphType === 'X-S' || graphInfo.graphType === '中位数' || graphInfo.graphType === 'nP' || graphInfo.graphType === 'C' || graphInfo.grapohType === '回归' || graphInfo.grapohType === 'T-K' || graphInfo.graphType === '一阶嵌套' || graphInfo.graphType === '综合'">
       {{ graphInfo.subgroupCapacity }}
     </a-descriptions-item>
 
@@ -89,7 +90,7 @@
     </a-form>
   </div>
 
-  <!-- 回归控制图 -->
+  <!-- 回归、T-K控制图 -->
   <div v-for="(row, index1) in dataArrayRegressionTK" :key="index1" v-if="graphInfo.graphType ==='回归' || graphInfo.graphType === 'T-K'">
     <a-divider>子组编号{{ index1+1 }}</a-divider>
     <a-form>
@@ -127,6 +128,30 @@
     <a-form>
       <a-form-item v-for="(item, index2) in row" :label="`变量编号${String(index2+1)}`" :key="index2" :label-col="{ span: 3 }" :wrapper-col="{ span: 19 }">
         <a-input type="number" placeholder="请填入实际测量值，如：50.12" v-model:value="dataArrayT2Single[index1][index2]"></a-input>
+      </a-form-item>
+    </a-form>
+  </div>
+
+  <!-- 综合控制图只做了”嵌套-回归“控制图作为demo -->
+  <div v-for="(row, index1) in dataArrayIntegratedDemo" :key="index1" v-if="graphInfo.graphType ==='综合'">
+    <a-divider>子组编号{{ index1+1 }}</a-divider>
+    <a-form>
+      <a-form-item label="目标值" :label-col="{ span: 3 }" :wrapper-col="{ span: 19 }">
+        <a-input type="number" placeholder="请填入目标值，如：50.00" v-model:value="dataArrayIntegratedDemoStandard[index1]"></a-input>
+      </a-form-item>
+      <!--
+      <a-form-item label="精度" :label-col="{ span: 3 }" :wrapper-col="{ span: 19 }">
+        <a-input placeholder="请填入精度，如：0.10%" v-model:value="dataArrayRegressionTKPrecision[index1]"></a-input>
+      </a-form-item>
+
+      <a-form-item label="品种编号" :label-col="{ span: 3 }" :wrapper-col="{ span: 19 }">
+        <a-input type="number" placeholder="请填入品种编号，如：2" v-model:value="dataArrayRegressionTKSort[index1]"></a-input>
+      </a-form-item>
+      -->
+      <br/>
+
+      <a-form-item v-for="(item, index2) in row" :label="`样品编号${String(index2+1)}`" :key="index2" :label-col="{ span: 3 }" :wrapper-col="{ span: 19 }">
+        <a-input type="number" placeholder="请填入实际测量值，如：50.12" v-model:value="dataArrayIntegratedDemo[index1][index2]"></a-input>
       </a-form-item>
     </a-form>
   </div>
@@ -197,13 +222,26 @@ export default {
     const dataArrayT2Single = ref(arr11)
 
 
+    // ---------------- 综合控制图只做了”嵌套-回归“控制图作为demo -----------------------------------------
+    let arr12 = [];   let arr13 = [];  // 用于记录综合控制图数据 arr12：测量数据 arr13：目标值
+    for (let i = 0; i < Number(graphInfo.value.subgroupTotal); i++) {
+      let temp = []
+      for (let j = 0; j < Number(graphInfo.value.subgroupCapacity); j++) temp.push(null);
+      arr12.push(temp);
+      arr13.push(null);
+    }
+    const dataArrayIntegratedDemo = ref(arr12); const dataArrayIntegratedDemoStandard = ref(arr13);
+    // -----------------------------------------------------------------------------------------------
+
+
+
+
+
     const graphTypeText = ref();
 
     for (let i = 0; i < graphTypeDictionary.graphDictionaryValue.length; i++) {
       if (graphTypeDictionary.graphDictionaryValue[i] === graphInfo.value.graphType) graphTypeText.value = graphTypeDictionary.graphDictionaryText[i]
     }
-
-
 
     const handleSubmit = () => {
       console.log(dataArrayRegressionTKPrecision.value)
@@ -229,6 +267,11 @@ export default {
 
         dataArrayFirstOrderNested: dataArrayFirstOrderNested.value,
         dataArrayT2Single: dataArrayT2Single.value,
+
+        // ---------------- 综合控制图只做了”嵌套-回归“控制图作为demo ---------------
+        dataArrayIntegratedDemo: dataArrayIntegratedDemo.value,
+        dataArrayIntegratedDemoStandard: dataArrayIntegratedDemoStandard.value,
+        // ---------------------------------------------------------------------
       }).then((response) => {
         const data = response.data;
         if (data.success) {
@@ -245,6 +288,10 @@ export default {
           if (graphData.value.graphType === 'T-K')                                        router.push({name: 'GraphTK', params:{ graphData: JSON.stringify(graphData.value)} })
           if (graphData.value.graphType === '一阶嵌套') router.push({name: 'GraphFirstOrderNested', params:{ graphData: JSON.stringify(graphData.value)} })
           if (graphData.value.graphType === '单值多变量T^2') router.push({name: 'GraphT2Single', params:{ graphData: JSON.stringify(graphData.value)} })
+
+
+          // ---- 综合控制图只做了”嵌套-回归“控制图作为demo ---
+          if (graphData.value.graphType === '综合') router.push({name: 'GraphIntegratedDemo', params:{ graphData: JSON.stringify(graphData.value)} })
         } else {
           message.error("返回计算及分析结果出错！");
         }
@@ -257,8 +304,13 @@ export default {
         (dataArrayXMR.value)[i] = null; (dataArrayCnP.value)[i] = null; (dataArrayPUPTUTSubgroupsCapacity.value)[i] = null; (dataArrayPUPTUTDefectsNum.value)[i] = null;
         (dataArrayRegressionTKStandard.value)[i] = null; (dataArrayRegressionTKPrecision.value)[i] = null; (dataArrayRegressionTKSort.value)[i] = null;
 
+        // ---- 综合控制图只做了”嵌套-回归“控制图作为demo ---
+        (dataArrayIntegratedDemoStandard.value)[i] = null;
         for (let j = 0; j < Number(graphInfo.value.subgroupCapacity); j++) {
           (dataArrayXRXSMedium.value)[i][j] = null; (dataArrayRegressionTK.value)[i][j] = null; (dataArrayFirstOrderNested.value)[i][j] = null; (dataArrayT2Single)[i][j] = null;
+
+          // ---- 综合控制图只做了”嵌套-回归“控制图作为demo ---
+          (dataArrayIntegratedDemo.value)[i][j] = null;
         }
       }
     }
@@ -285,6 +337,10 @@ export default {
       dataArrayFirstOrderNested,
 
       dataArrayT2Single,
+
+      // ---- 综合控制图只做了”嵌套-回归“控制图作为demo ---
+      dataArrayIntegratedDemo,
+      dataArrayIntegratedDemoStandard,
     }
   }
 }

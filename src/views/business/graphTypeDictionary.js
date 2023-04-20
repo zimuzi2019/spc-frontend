@@ -14,6 +14,7 @@ export const graphTypeDictionary = {
     "T-K控制图",
     "一阶嵌套控制图",
     "单值多变量T^2控制图",
+    "综合控制图"
   ],
   graphDictionaryValue: [
     "X-R",
@@ -30,5 +31,8 @@ export const graphTypeDictionary = {
     "T-K",
     "一阶嵌套",
     "单值多变量T^2",
+    "综合",
   ],
 };
+
+// 此处的综合控制图只做了”嵌套-回归“控制图作为demo，实际情况应该更复杂
