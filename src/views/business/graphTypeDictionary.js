@@ -13,6 +13,8 @@ export const graphTypeDictionary = {
     "回归控制图",
     "T-K控制图",
     "一阶嵌套控制图",
+    "二阶嵌套控制图",
+    "多变量T^2控制图",
     "单值多变量T^2控制图",
     "综合控制图"
   ],
@@ -30,6 +32,8 @@ export const graphTypeDictionary = {
     "回归",
     "T-K",
     "一阶嵌套",
+    "二阶嵌套",
+    "多变量T^2",
     "单值多变量T^2",
     "综合",
   ],

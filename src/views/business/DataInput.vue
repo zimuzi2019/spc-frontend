@@ -6,14 +6,19 @@
 
   <a-descriptions bordered column="2">
     <a-descriptions-item label="控制图类型">{{ graphTypeText }}</a-descriptions-item>
+
+    <a-descriptions-item label="批次总数" v-if="graphInfo.graphType === '二阶嵌套'">
+      {{ graphInfo.batchNum }}
+    </a-descriptions-item>
+
     <a-descriptions-item label="子组总数">{{ graphInfo.subgroupTotal }}</a-descriptions-item>
 
     <!-- 综合控制图只做了”嵌套-回归“控制图作为demo -->
-    <a-descriptions-item label="子组容量" v-if="graphInfo.graphType === 'X-R' || graphInfo.graphType === 'X-S' || graphInfo.graphType === '中位数' || graphInfo.graphType === 'nP' || graphInfo.graphType === 'C' || graphInfo.grapohType === '回归' || graphInfo.grapohType === 'T-K' || graphInfo.graphType === '一阶嵌套' || graphInfo.graphType === '综合'">
+    <a-descriptions-item label="子组容量" v-if="graphInfo.graphType === 'X-R' || graphInfo.graphType === 'X-S' || graphInfo.graphType === '中位数' || graphInfo.graphType === 'nP' || graphInfo.graphType === 'C' || graphInfo.grapohType === '回归' || graphInfo.grapohType === 'T-K' || graphInfo.graphType === '一阶嵌套' || graphInfo.graphType === '综合' || graphInfo.graphType === '二阶嵌套' || graphInfo.graphType === '多变量T^2'">
       {{ graphInfo.subgroupCapacity }}
     </a-descriptions-item>
 
-    <a-descriptions-item label="变量个数" v-if="graphInfo.graphType === '单值多变量T^2'">
+    <a-descriptions-item label="变量个数" v-if="graphInfo.graphType === '单值多变量T^2' || graphInfo.graphType === '多变量T^2'">
       {{ graphInfo.varNum }}
     </a-descriptions-item>
 
@@ -155,6 +160,32 @@
       </a-form-item>
     </a-form>
   </div>
+
+  <!-- 二阶嵌套控制图数据 -->
+  <div v-for="(batch, index1) in dataArraySecondOrderNested" :key="index1" v-if="graphInfo.graphType === '二阶嵌套'">
+    <a-divider>批次编号{{ index1+1 }}</a-divider>
+    <div v-for="(row, index2) in batch" :key="index2">
+      <a-divider>子组编号{{ index2+1 }}</a-divider>
+      <a-form>
+        <a-form-item v-for="(item, index3) in row" :label="`样本编号${String(index3+1)}`" :key="index3" :label-col="{ span: 3 }" :wrapper-col="{ span: 19 }">
+          <a-input type="number" placeholder="请填入实际测量值，如：50.12" v-model:value="dataArraySecondOrderNested[index1][index2][index3]"></a-input>
+        </a-form-item>
+      </a-form>
+    </div>
+  </div>
+
+  <!-- 多变量T^2控制图数据 -->
+  <div v-for="(batch, index1) in dataArrayT2" :key="index1" v-if="graphInfo.graphType === '多变量T^2'">
+    <a-divider>子组编号{{ index1+1 }}</a-divider>
+    <div v-for="(row, index2) in batch" :key="index2">
+      <a-divider>变量编号{{ index2+1 }}</a-divider>
+      <a-form>
+        <a-form-item v-for="(item, index3) in row" :label="`样本编号${String(index3+1)}`" :key="index3" :label-col="{ span: 3 }" :wrapper-col="{ span: 19 }">
+          <a-input type="number" placeholder="请填入实际测量值，如：50.12" v-model:value="dataArrayT2[index1][index2][index3]"></a-input>
+        </a-form-item>
+      </a-form>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -234,6 +265,33 @@ export default {
     // -----------------------------------------------------------------------------------------------
 
 
+    let arr14 = []   // 用于记录二阶嵌套控制图数据
+    for (let i = 0; i < Number(graphInfo.value.batchNum); i++) {
+      let temp1 = []
+      for (let j = 0; j < Number(graphInfo.value.subgroupTotal); j++) {
+        let temp2 = []
+        for (let k = 0; k < Number(graphInfo.value.subgroupCapacity); k++) {
+          temp2.push(null);
+        }
+        temp1.push(temp2)
+      }
+      arr14.push(temp1);
+    }
+    const dataArraySecondOrderNested= ref(arr14)
+
+    let arr15 = []   // 用于记录多变量T^2控制图数据
+    for (let i = 0; i < Number(graphInfo.value.subgroupTotal); i++) {
+      let temp1 = []
+      for (let j = 0; j < Number(graphInfo.value.varNum); j++) {
+        let temp2 = []
+        for (let k = 0; k < Number(graphInfo.value.subgroupCapacity); k++) {
+          temp2.push(null);
+        }
+        temp1.push(temp2)
+      }
+      arr15.push(temp1);
+    }
+    const dataArrayT2= ref(arr15)
 
 
 
@@ -244,9 +302,10 @@ export default {
     }
 
     const handleSubmit = () => {
-      console.log(dataArrayRegressionTKPrecision.value)
+      console.log(dataArrayT2.value)
       axios.post("/spc/draw", {
         graphType: graphInfo.value.graphType,
+        batchNum: graphInfo.value.batchNum,
         subgroupTotal: graphInfo.value.subgroupTotal,
         subgroupCapacity: graphInfo.value.subgroupCapacity,
         usl: graphInfo.value.USL,
@@ -266,7 +325,9 @@ export default {
         dataArrayRegressionTKSort: dataArrayRegressionTKSort.value,
 
         dataArrayFirstOrderNested: dataArrayFirstOrderNested.value,
+        dataArraySecondOrderNested: dataArraySecondOrderNested.value,
         dataArrayT2Single: dataArrayT2Single.value,
+        dataArrayT2: dataArrayT2.value,
 
         // ---------------- 综合控制图只做了”嵌套-回归“控制图作为demo ---------------
         dataArrayIntegratedDemo: dataArrayIntegratedDemo.value,
@@ -287,6 +348,8 @@ export default {
           if (graphData.value.graphType === '回归')                                        router.push({name: 'GraphRegression', params:{ graphData: JSON.stringify(graphData.value)} })
           if (graphData.value.graphType === 'T-K')                                        router.push({name: 'GraphTK', params:{ graphData: JSON.stringify(graphData.value)} })
           if (graphData.value.graphType === '一阶嵌套') router.push({name: 'GraphFirstOrderNested', params:{ graphData: JSON.stringify(graphData.value)} })
+          if (graphData.value.graphType === '二阶嵌套') router.push({name: 'GraphSecondOrderNested', params:{ graphData: JSON.stringify(graphData.value)} })
+          if (graphData.value.graphType === '多变量T^2') router.push({name: 'GraphT2', params:{ graphData: JSON.stringify(graphData.value)} })
           if (graphData.value.graphType === '单值多变量T^2') router.push({name: 'GraphT2Single', params:{ graphData: JSON.stringify(graphData.value)} })
 
 
@@ -300,6 +363,24 @@ export default {
     }
 
     const handleClear = () => {
+      // 清空二阶嵌套控制图数据
+      for (let i = 0; i < Number(graphInfo.value.batchNum); i++) {
+        for (let j = 0; j < Number(graphInfo.value.subgroupTotal); j++) {
+          for (let k = 0; k < Number(graphInfo.value.subgroupCapacity); k++) {
+            (dataArraySecondOrderNested.value)[i][j][k] = null;
+          }
+        }
+      }
+
+      // 清空多变量T^2控制图数据
+      for (let i = 0; i < Number(graphInfo.value.subgroupTotal); i++) {
+        for (let j = 0; j < Number(graphInfo.value.varNum); j++) {
+          for (let k = 0; k < Number(graphInfo.value.subgroupCapacity); k++) {
+            (dataArrayT2.value)[i][j][k] = null;
+          }
+        }
+      }
+
       for (let i = 0; i < Number(graphInfo.value.subgroupTotal); i++) {
         (dataArrayXMR.value)[i] = null; (dataArrayCnP.value)[i] = null; (dataArrayPUPTUTSubgroupsCapacity.value)[i] = null; (dataArrayPUPTUTDefectsNum.value)[i] = null;
         (dataArrayRegressionTKStandard.value)[i] = null; (dataArrayRegressionTKPrecision.value)[i] = null; (dataArrayRegressionTKSort.value)[i] = null;
@@ -307,10 +388,14 @@ export default {
         // ---- 综合控制图只做了”嵌套-回归“控制图作为demo ---
         (dataArrayIntegratedDemoStandard.value)[i] = null;
         for (let j = 0; j < Number(graphInfo.value.subgroupCapacity); j++) {
-          (dataArrayXRXSMedium.value)[i][j] = null; (dataArrayRegressionTK.value)[i][j] = null; (dataArrayFirstOrderNested.value)[i][j] = null; (dataArrayT2Single)[i][j] = null;
+          (dataArrayXRXSMedium.value)[i][j] = null; (dataArrayRegressionTK.value)[i][j] = null; (dataArrayFirstOrderNested.value)[i][j] = null;
 
           // ---- 综合控制图只做了”嵌套-回归“控制图作为demo ---
           (dataArrayIntegratedDemo.value)[i][j] = null;
+        }
+
+        for (let j = 0 ; j < Number(graphInfo.value.varNum); j++) {
+          (dataArrayT2Single.value)[i][j] = null;
         }
       }
     }
@@ -335,8 +420,10 @@ export default {
       dataArrayRegressionTKSort,
 
       dataArrayFirstOrderNested,
+      dataArraySecondOrderNested,
 
       dataArrayT2Single,
+      dataArrayT2,
 
       // ---- 综合控制图只做了”嵌套-回归“控制图作为demo ---
       dataArrayIntegratedDemo,
